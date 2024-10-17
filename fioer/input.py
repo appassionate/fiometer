@@ -1,4 +1,4 @@
-from .utils import ini2dict, dict2ini, generate_fio_input_file
+from .utils import ini2dict, dict2ini
 
 class Input():
     

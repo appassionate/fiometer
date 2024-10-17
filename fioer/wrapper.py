@@ -27,9 +27,6 @@ class FioWrapper:
             for key, value in cli_params.items():
                 command += f' --{key}={value}'
         
-        # change to json output, need test
-        # command += f' --output-format=json'
-        # command += f' --output=output.json'
         
         # output,error file
         if output_file:
@@ -37,6 +34,7 @@ class FioWrapper:
         if error_file:
             command += f" 2> {error_file}"
         
+        print("current work path:", self.work_path)
         print(f"Executing fio command: {command}")
 
         # 执行命令
@@ -47,7 +45,7 @@ class FioWrapper:
                               text=True) as proc:
             
             stdout, stderr = proc.communicate()
-            print("current work path:", self.work_path)
+            
             if proc.returncode != 0:
                 raise RuntimeError(f"fio failed with error:\n{stderr}")
             

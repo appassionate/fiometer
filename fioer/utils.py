@@ -26,10 +26,14 @@ def dict2ini(config_dict):
 
     return ini_text
 
-def generate_fio_input_file(fio_input_file, fio_input):
-    with open(fio_input_file, 'w') as f:
-        f.write(json.dumps(fio_input, indent=4))
-        
+
+def process_json_timestamp(json_text:str):
+    
+    json_text = '[' + json_text.replace('}\n{', '},{') + ']'
+    json_data = json.loads(json_text)
+    
+    return json_data
+
 
 def find_executable():
     # linux: which command to find executable

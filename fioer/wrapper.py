@@ -33,8 +33,7 @@ class FioWrapper:
         if error_file:
             command += f" 2> {error_file}"
         
-            
-        print(f"Executing fio command: {' '.join(command)}")
+        print(f"Executing fio command: {command}")
 
         # 执行命令
         with subprocess.Popen(command, shell=True, cwd=self.work_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:

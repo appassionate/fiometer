@@ -35,7 +35,7 @@ class Job(JobBase):
         with open(self.work_path / "input.fio", 'w') as f:
             f.write(self.input.render_dict())
     
-    def run(self):
+    def run(self, cli_params=None):
         
         
         self.write_input_file()
@@ -43,5 +43,5 @@ class Job(JobBase):
         fio = FioWrapper(work_path=str(self.work_path.absolute()), 
                          fio_binary=self.executable, 
                          config_file="input.fio")
-        fio.run()
+        fio.run(cli_params=cli_params)
         

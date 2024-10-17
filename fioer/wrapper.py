@@ -26,7 +26,10 @@ class FioWrapper:
         if cli_params:
             for key, value in cli_params.items():
                 command += f' --{key}={value}'
-
+                
+        command += f' --output-format=json'
+        command += f' --output=output.json'
+        
         # output,error file
         if output_file:
             command += f" > {output_file}"
@@ -36,7 +39,12 @@ class FioWrapper:
         print(f"Executing fio command: {command}")
 
         # 执行命令
-        with subprocess.Popen(command, shell=True, cwd=self.work_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
+        with subprocess.Popen(command, shell=True, 
+                              cwd=self.work_path, 
+                              stdout=subprocess.PIPE, 
+                              stderr=subprocess.PIPE, 
+                              text=True) as proc:
+            
             stdout, stderr = proc.communicate()
             print("current work path:", self.work_path)
             if proc.returncode != 0:

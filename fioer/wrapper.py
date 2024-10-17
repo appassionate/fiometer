@@ -25,7 +25,7 @@ class FioWrapper:
         # 添加 CLI 参数
         if cli_params:
             for key, value in cli_params.items():
-                command.append(f'--{key}={value}')
+                command.append(f' --{key}={value} ')
         
         if output_file:
             command.append(f" > {output_file}")

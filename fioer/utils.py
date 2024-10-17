@@ -20,7 +20,7 @@ def dict2ini(config_dict):
         config[section] = options
 
     with StringIO() as f:
-        config.write(f)
+        config.write(f, space_around_delimiters=False)
         ini_text = f.getvalue()
 
 

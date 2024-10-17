@@ -7,7 +7,7 @@ from .input import Input
 
 class JobBase():
     
-    work_path: Path = None
+    work_path: str = None
     #TODO:refactor executable later
     executable: str 
     input: Input = Input()
@@ -25,14 +25,14 @@ class Job(JobBase):
     
     def __init__(self, work_path, input_dict, **kwargs):
         
-        self.work_path = Path(work_path)
+        self.work_path = str(Path(work_path).absolute())
         self.input.content = input_dict
         self.executable = "fio"
         
     def write_input_file(self):
         # create work_dir if not exists
         Path(self.work_path).mkdir(parents=True, exist_ok=False)
-        with open(self.work_path / "input.fio", 'w') as f:
+        with open(Path(self.work_path) / "input.fio", 'w') as f:
             f.write(self.input.render_dict())
     
     def run(self, cli_params=None):
@@ -40,7 +40,7 @@ class Job(JobBase):
         
         self.write_input_file()
         # using fio wrapper to run the job
-        fio = FioWrapper(work_path=str(self.work_path.absolute()), 
+        fio = FioWrapper(work_path=str(self.work_path), 
                          fio_binary=self.executable, 
                          config_file="input.fio")
         fio.run(cli_params=cli_params,output_file="output", error_file="error")

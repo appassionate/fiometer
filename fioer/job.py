@@ -43,5 +43,5 @@ class Job(JobBase):
         fio = FioWrapper(work_path=str(self.work_path.absolute()), 
                          fio_binary=self.executable, 
                          config_file="input.fio")
-        fio.run(cli_params=cli_params)
+        fio.run(cli_params=cli_params,output_file="output", error_file="error")
         

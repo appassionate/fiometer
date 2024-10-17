@@ -8,7 +8,7 @@ class FioWrapper:
         self.work_path = work_path
 
 
-    def run(self, cli_params=None, output_file=None):
+    def run(self, cli_params=None, output_file=None, error_file=None):
         """
         执行 fio，传递 CLI 参数和配置文件。
         
@@ -27,6 +27,10 @@ class FioWrapper:
             for key, value in cli_params.items():
                 command.append(f'--{key}={value}')
         
+        if output_file:
+            command.append(f" > {output_file}")
+        if error_file:
+            command.append(f" 2> {error_file}")
         print(f"Executing fio command: {' '.join(command)}")
 
         # 执行命令
@@ -37,9 +41,5 @@ class FioWrapper:
                 raise RuntimeError(f"fio failed with error:\n{stderr}")
             
             # save subprocess output to file
-            if output_file:
-                with open(output_file, 'w') as f:
-                    f.write(stdout)
-                print(f"Fio output saved to: {output_file}")
 
             return stdout

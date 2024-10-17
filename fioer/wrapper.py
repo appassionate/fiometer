@@ -26,9 +26,10 @@ class FioWrapper:
         if cli_params:
             for key, value in cli_params.items():
                 command += f' --{key}={value}'
-                
-        command += f' --output-format=json'
-        command += f' --output=output.json'
+        
+        # change to json output, need test
+        # command += f' --output-format=json'
+        # command += f' --output=output.json'
         
         # output,error file
         if output_file:

@@ -13,7 +13,7 @@ def ini2dict(ini_text):
     config_dict = {section: dict(config.items(section)) for section in config.sections()}
     return config_dict
 
-def dict_to_ini(config_dict):
+def dict2ini(config_dict):
     
     config = configparser.ConfigParser()
     for section, options in config_dict.items():

@@ -37,6 +37,8 @@ class Job(JobBase):
     
     def run(self):
         
+        
+        self.write_input_file()
         # using fio wrapper to run the job
         fio = FioWrapper(work_path=str(self.work_path.absolute()), 
                          fio_binary=self.executable, 

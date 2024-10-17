@@ -36,7 +36,7 @@ class FioWrapper:
         # 执行命令
         with subprocess.Popen(command, cwd=self.work_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as proc:
             stdout, stderr = proc.communicate()
-
+            print("current work path:", self.work_path)
             if proc.returncode != 0:
                 raise RuntimeError(f"fio failed with error:\n{stderr}")
             

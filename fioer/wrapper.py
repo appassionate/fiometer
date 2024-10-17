@@ -19,18 +19,21 @@ class FioWrapper:
         if not self.config_file:
             raise ValueError("No fio config file specified or created")
 
-        # 基础命令
-        command = [self.fio_binary, self.config_file]
+        # base command
+        command = f"{self.fio_binary} {self.config_file}"
 
-        # 添加 CLI 参数
+        # add cli params
         if cli_params:
             for key, value in cli_params.items():
-                command.append(f' --{key}={value} ')
-        
+                command += f' --{key}={value}'
+
+        # output,error file
         if output_file:
-            command.append(f" > {output_file}")
+            command += f" > {output_file}"
         if error_file:
-            command.append(f" 2> {error_file}")
+            command += f" 2> {error_file}"
+        
+            
         print(f"Executing fio command: {' '.join(command)}")
 
         # 执行命令

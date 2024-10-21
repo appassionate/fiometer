@@ -1,11 +1,46 @@
 # fioer
-python wrapper and default test settings for io, ssd-test oriented
+python wrapper and default test settings for fio, ssd-test oriented
 
 
 ## example 
-todo...
+### 1. random write example
+
+```python
+from fioer.job import Job
+import os
+from pathlib import Path
+
+template_file = "bala/randw.fio"
+
+randw = Job(work_path="./randw",input_dict=None,)
+randw.input.from_input_file(template_file)
+randw.run(cli_params={"status-interval":"1"})
+```
+
+template: randw.fio
+```ini
+[global]
+name=fio-rand-write
+filename=fio-rand-write
+rw=randwrite
+bs=4K
+direct=1
+numjobs=8
+time_based=1
+runtime=100
+ioengine=libaio
+iodepth=16
+
+
+[file1]
+size=10M
+
+
+```
+
 
 ## data visualization
+from data(parsed.json)
 
 ![iops](./images/iops.png)
 ![latency-total](./images/lat_ns.png)

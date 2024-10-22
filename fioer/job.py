@@ -15,10 +15,10 @@ class JobBase():
     input: Input = Input()
     
     def write_input_file(self):
-        raise NotImplementedError('run method is not implemented yet')
+        raise NotImplementedError('run method is not implemented in base')
     
     def run():
-        raise NotImplementedError('run method is not implemented yet')
+        raise NotImplementedError('run method is not implemented in base')
     
     pass
 

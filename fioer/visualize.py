@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+_DPI = 600
+
 
 
 def cumsum(array):
@@ -25,7 +27,7 @@ def show_latency(output:dict, type=""):
     
     
     # 使用fig, ax的方式来创建matplotlib图
-    fig, ax = plt.subplots(figsize=(10, 3),dpi=600)
+    fig, ax = plt.subplots(figsize=(10, 3),dpi=_DPI)
     
     # 绘制折线图
     ax.plot(range(len(output)), collect_lat_mean, label=f"{type}_mean", color="b")
@@ -54,8 +56,8 @@ def show_iops(output:dict, ):
     
     ## GRAPH2: IOPS
 
-    collect_iops_mean = [frame["jobs"][0]["write"]["iops"] for frame in traj]
-    collect_iops      = [frame["jobs"][0]["write"]["iops_mean"] for frame in traj]
+    collect_iops_mean = [frame["jobs"][0]["write"]["iops"] for frame in output]
+    collect_iops      = [frame["jobs"][0]["write"]["iops_mean"] for frame in output]
 
 
     # traj[0]["jobs"][0]["write"]["iops_min"]
@@ -65,7 +67,7 @@ def show_iops(output:dict, ):
     #traj[0]["jobs"][0]["write"]["iops_samples"]
 
     # 使用fig, ax的方式来创建matplotlib图
-    fig, ax = plt.subplots(figsize=(10, 3),dpi=600)
+    fig, ax = plt.subplots(figsize=(10, 3),dpi=_DPI)
 
     # 绘制折线图
     ax.plot(range(100), collect_iops_mean, label="iops_mean", color="b")

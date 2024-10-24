@@ -3,9 +3,14 @@ import subprocess
 import json
 from pathlib import Path
 
+
+
 from .wrapper import FioWrapper
 from .input import Input
 from .utils import process_json_timestamp
+from .visualize import FioView
+
+
 
 class JobBase():
     
@@ -20,6 +25,9 @@ class JobBase():
     def run():
         raise NotImplementedError('run method is not implemented in base')
     
+    def get_file_directory(self, filename):
+        return Path(self.work_path).joinpath(filename).absolute()
+    
     pass
 
 #TODO: refactor to FioTask
@@ -27,9 +35,10 @@ class Job(JobBase):
     
     def __init__(self, work_path, input_dict, **kwargs):
         
+        self.executable = "fio"
         self.work_path = str(Path(work_path).absolute())
         self.input.content = input_dict
-        self.executable = "fio"
+        self.view = FioView(self)
         
     def write_input_file(self):
         # create work_dir if not exists

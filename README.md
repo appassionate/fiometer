@@ -27,7 +27,7 @@ bs=4K
 direct=1
 numjobs=8
 time_based=1
-runtime=100
+runtime=200
 ioengine=libaio
 iodepth=16
 
@@ -42,5 +42,10 @@ size=10M
 ## data visualization
 from data(parsed.json)
 
+```python
+randw.view.view_iops(mode="write")
+randw.view.view_latency(mode="write", lat_type="lat")
+```
+
 ![iops](./images/iops.png)
-![latency-total](./images/lat_ns.png)
+![latency-total](./images/latency.png)

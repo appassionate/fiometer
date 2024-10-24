@@ -22,7 +22,7 @@ class JobBase():
     
     pass
 
-
+#TODO: refactor to FioTask
 class Job(JobBase):
     
     def __init__(self, work_path, input_dict, **kwargs):
@@ -74,3 +74,24 @@ class Job(JobBase):
             self.process_output_json()
         
         print("--fio task done--")
+
+
+# add an abstraction of PurgeTask
+# PurgeTask will remove the disk(very dangerous) to the "FOB" state according to the SNIA standard
+# using the linux nvme-cli tool to implement the feature
+#ref: https://askubuntu.com/questions/1310338/how-to-secure-erase-a-nvme-ssd
+
+class PurgeTask(JobBase):
+    
+    def __init__(self, work_path, input_dict, **kwargs):
+        
+        self.work_path = str(Path(work_path).absolute())
+        self.input.content = input_dict
+        self.executable = "nvme"
+        
+    def write_input_file(self):
+        # create work_dir if not exists
+        pass
+    
+    def run(self, cli_params=None):
+        pass

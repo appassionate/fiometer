@@ -49,3 +49,5 @@ randw.view.view_latency(mode="write", lat_type="lat")
 
 ![iops](./images/iops.png)
 ![latency-total](./images/latency.png)
+latency per job:
+![latency-total](./images/lat_perjob.png)

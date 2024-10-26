@@ -4,13 +4,16 @@ import json
 from pathlib import Path
 from pydantic import BaseModel
 
-
+from .log import get_logger
 from .wrapper import FioWrapper
 from .input import FioInput
 from .utils import process_json_timestamp
 from .visualize import FioView
 
 #TODO: job.status: init, created, running, done
+
+logger = get_logger(__name__)
+
 
 class JobBase(BaseModel):
     
@@ -75,9 +78,9 @@ class FioTask(JobBase):
         if Path(self.work_path).exists():
             try:
                 self._load_workpath()
-                print("job info exists, reloaded, if u want create a new job, clean the work_path")
+                logger.warning("job info exists, reloaded, if u want create a new job, clean the work_path")
             except:
-                print("job info corrupted, reinit")
+                logger.warning("job info corrupted, reinit")
                 Path(self.work_path).mkdir(parents=True, exist_ok=True)
                 self._dump_workpath()
 
@@ -106,7 +109,7 @@ class FioTask(JobBase):
     def run(self, cli_params=None):
         
         if self.status == "done":
-            print("job already done, if u want to rerun, clean the work_path")
+            logger.warning("job already done, if u want to rerun, clean the work_path")
             return
         
         self.status = "running"
@@ -114,9 +117,9 @@ class FioTask(JobBase):
         
         self.cli_params = cli_params # update used cli_params
         
-        print("--run fio task--")
-        print("current input.fio:")
-        print(self.input.render_dict())
+        logger.info("--run fio task--")
+        logger.info("current input.fio:")
+        logger.info(self.input.render_dict())
         
         self.write_input()
         # using fio wrapper to run the job
@@ -139,7 +142,7 @@ class FioTask(JobBase):
         if format_type=="json":
             self.process_output_json()
         
-        print("--fio task done--")
+        logger.info("--fio task done--")
         
         self.status = "done"
         self._dump_workpath()

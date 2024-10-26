@@ -127,13 +127,11 @@ class FioView(BaseModel):
         # graph: overview, contains n*1 sub-graphs
         output = _load_json(self.output)
         job_num = len(output[0]["jobs"])
-        print(job_num)
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
         
         #avoiding subscriptable error
         if job_num == 1:
             axs = [axs]
-        print(axs)
         for i, ax in enumerate(axs):
             self.view_latency(mode=mode, lat_type=lat_type, job_num=i, ax=ax)
         
@@ -148,13 +146,11 @@ class FioView(BaseModel):
         # graph: overview, contains n*1 sub-graphs
         output = _load_json(self.output)
         job_num = len(output[0]["jobs"])
-        print(job_num)
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
         
         #avoiding subscriptable error
         if job_num == 1:
             axs = [axs]
-        print(axs)
         for i, ax in enumerate(axs):
             self.view_iops(mode=mode, job_num=i, ax=ax)
         

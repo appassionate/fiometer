@@ -37,8 +37,8 @@ class FioWrapper:
         if error_file:
             command += f" 2> {error_file}"
         
-        logger.info("current work path:", self.work_path)
-        logger.info(f"Executing fio command: {command}")
+        logger.info(f"current work path: {self.work_path}")
+        logger.info(f"executing fio command: {command}")
 
         # 执行命令
         with subprocess.Popen(command, shell=True, 

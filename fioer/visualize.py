@@ -1,5 +1,7 @@
 import pandas as pd
+from pathlib import Path
 
+from pydantic import BaseModel
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -20,16 +22,22 @@ def _load_json(file):
 def _create_fig():
     return plt.subplots(figsize=(10, 3), dpi=_DPI)
 
-class FioView():
+class FioView(BaseModel):
     
-    def __init__(self, job):
-        
-        self._job = job
-        self.output_file = self._job.get_file_directory("parsed.json")
+    
+    work_path: str = ""
+    file_output: str = "parsed.json"
+    
+    def _load_job_info(self, job):
+        self.work_path = job.work_path
+
+    @property
+    def output(self):
+        return str(Path(self.work_path).joinpath(self.file_output).absolute())
 
     def view_latency(self, mode="write", lat_type="", job_num=0, ax=None):
         
-        output = _load_json(self.output_file)
+        output = _load_json(self.output)
         
         if lat_type not in LATENCY_TYPE:
             raise ValueError(f"latency type not supported: {lat_type}")
@@ -71,7 +79,7 @@ class FioView():
 
     def view_iops(self, mode, job_num=0, ax=None):
         
-        output = _load_json(self.output_file)
+        output = _load_json(self.output)
         lenframe = len(output)
         
         collect_iops_mean = [frame["jobs"][0][mode]["iops"] for frame in output]
@@ -117,15 +125,13 @@ class FioView():
     def overview_latency(self, mode="write", lat_type="lat", dpi=300):
         
         # graph: overview, contains n*1 sub-graphs
-        output = _load_json(self.output_file)
+        output = _load_json(self.output)
         job_num = len(output[0]["jobs"])
-        print(job_num)
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
         
         #avoiding subscriptable error
         if job_num == 1:
             axs = [axs]
-        print(axs)
         for i, ax in enumerate(axs):
             self.view_latency(mode=mode, lat_type=lat_type, job_num=i, ax=ax)
         
@@ -138,15 +144,13 @@ class FioView():
         #TODO: dpi imple
         
         # graph: overview, contains n*1 sub-graphs
-        output = _load_json(self.output_file)
+        output = _load_json(self.output)
         job_num = len(output[0]["jobs"])
-        print(job_num)
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
         
         #avoiding subscriptable error
         if job_num == 1:
             axs = [axs]
-        print(axs)
         for i, ax in enumerate(axs):
             self.view_iops(mode=mode, job_num=i, ax=ax)
         

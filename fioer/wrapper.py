@@ -1,4 +1,7 @@
 import subprocess
+from .log import get_logger
+
+logger = get_logger(__name__)
 
 class FioWrapper:
     def __init__(self, work_path=".", fio_binary='fio', config_file="input.fio"):
@@ -34,8 +37,8 @@ class FioWrapper:
         if error_file:
             command += f" 2> {error_file}"
         
-        print("current work path:", self.work_path)
-        print(f"Executing fio command: {command}")
+        logger.info(f"current work path: {self.work_path}")
+        logger.info(f"executing fio command: {command}")
 
         # 执行命令
         with subprocess.Popen(command, shell=True, 

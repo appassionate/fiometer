@@ -63,6 +63,9 @@ class FioTask(JobBase):
     
     cli_params: dict = {}
     
+    def __repr__(self):
+        return f"FioTask(work_path={self.work_path}, status={self.status}, exec={self.executable}, cli_params={self.cli_params})"
+    
     
     def __init__(self, work_path, input_dict={}, **kwargs):
         
@@ -119,7 +122,7 @@ class FioTask(JobBase):
         
         logger.info("--run fio task--")
         logger.info("current input.fio:")
-        logger.info(self.input.render_dict())
+        logger.info("\n"+self.input.render_dict())
         
         self.write_input()
         # using fio wrapper to run the job

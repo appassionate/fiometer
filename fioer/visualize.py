@@ -116,7 +116,7 @@ class FioView():
 
     def overview_latency(self, mode="write", lat_type="lat", dpi=300):
         
-        # 总图,包含job_num个子图, n行1列
+        # graph: overview, contains n*1 sub-graphs
         output = _load_json(self.output_file)
         job_num = len(output[0]["jobs"])
         print(job_num)
@@ -128,5 +128,26 @@ class FioView():
         print(axs)
         for i, ax in enumerate(axs):
             self.view_latency(mode=mode, lat_type=lat_type, job_num=i, ax=ax)
+        
+        return fig, axs
+    
+    
+    def overview_iops(self, mode="write", dpi=300):
+        
+        #TODO: cache the output json data, load once 
+        #TODO: dpi imple
+        
+        # graph: overview, contains n*1 sub-graphs
+        output = _load_json(self.output_file)
+        job_num = len(output[0]["jobs"])
+        print(job_num)
+        fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
+        
+        #avoiding subscriptable error
+        if job_num == 1:
+            axs = [axs]
+        print(axs)
+        for i, ax in enumerate(axs):
+            self.view_iops(mode=mode, job_num=i, ax=ax)
         
         return fig, axs

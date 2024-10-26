@@ -6,13 +6,13 @@ python wrapper and default test settings for fio, ssd-test oriented
 ### 1. random write example
 
 ```python
-from fioer.job import Job
+from fioer.job import FioTask
 import os
 from pathlib import Path
 
 template_file = "bala/randw.fio"
 
-randw = Job(work_path="./randw",input_dict=None,)
+randw = FioTask(work_path="./randw",input_dict=None,)
 randw.input.from_input_file(template_file)
 randw.run(cli_params={"status-interval":"1"})
 ```

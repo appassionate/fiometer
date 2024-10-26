@@ -35,8 +35,21 @@ iodepth=16
 [file1]
 size=10M
 
-
 ```
+
+
+## SNIA-PTS PARAMETER TABLE
+according to SNIA-PTS, section 2.1.1 
+
+| SNIA  | FIO  | Description |
+| --- | --- | --- |
+| `blocksize` | `bs` | block size |
+| `Read/Write` | `randrw(rwmixread=X)` | read/write |
+| `OIO: Outstanding IO,/( Queue Depth)` | `iodepth` | iodepth |
+| `Thread Count(Workers, Process)` | `numjobs` | number of jobs |
+| `Latency` | `slat, clat, lat` | latency |
+| `Cache` | `direct=1` | direct IO |
+
 
 
 ## data visualization

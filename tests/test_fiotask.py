@@ -5,7 +5,7 @@ from pathlib import Path
 import fioer
 from fioer.job import FioTask
 import pytest
-from pytest_dependency import depends
+# from pytest_dependency import depends
 
 
 _WORK_PATH = '/tmp/fioer/test/'

@@ -10,9 +10,6 @@ runtime=10
 ioengine=libaio
 iodepth=16
 
-;output-format=csv
-;status-interval=1
-
 
 [file1]
 size=10M

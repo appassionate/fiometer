@@ -3,6 +3,7 @@ import subprocess
 import json
 from pathlib import Path
 from pydantic import BaseModel
+from typing import Optional
 
 from .log import get_logger
 from .wrapper import FioWrapper
@@ -60,7 +61,7 @@ class FioTask(JobBase):
     input: FioInput = FioInput()
     view: FioView = None
 
-    cli_params: dict = {}
+    cli_params: Optional[dict] = {}
 
     def __repr__(self):
         return f"FioTask(work_path={self.work_path}, status={self.status}, exec={self.executable}, cli_params={self.cli_params})"

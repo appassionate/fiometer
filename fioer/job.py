@@ -136,13 +136,6 @@ class FioTask(JobBase):
 
         self.cli_params = cli_params  # update used cli_params
 
-        logger.info("--run fio task--")
-        logger.info("current input.fio:")
-        logger.info("\n"+self.input.render_dict())
-
-        self.write_input()
-        # using fio wrapper to run the job
-
         if not cli_params:
             cli_params = {}
         # TODO: here still consider the normal log output
@@ -152,6 +145,12 @@ class FioTask(JobBase):
             # set output file format: json, need test
             cli_params['output-format'] = 'json'
             cli_params['output'] = 'output.json'
+
+        self.write_input()
+        # using fio wrapper to run the job
+        logger.info("--run fio task--")
+        logger.info("current input.fio:")
+        logger.info("\n"+self.input.render_dict())
 
         fio = FioWrapper(work_path=str(self.work_path),
                          fio_binary=self.executable,
@@ -210,7 +209,52 @@ class PurgeTask(JobBase):
     
     def run(self, cli_params=None):
         
+        if self.status == "done":
+            logger.warning("job already done, if u want to rerun, clean the work_path")
+            return
+        self.status = "running"
         
+        command = f"nvme format {device_name}"
+        if not cli_params:
+            cli_params = {}
+        for key, value in cli_params.items():
+            command += f' --{key}={value}'
+        self.cli_params = cli_params  # update used cli_params
+        self.write_input()
         
+        logger.info("--run nvme-cli purge task--")
+        logger.info("current input:")
+        logger.info("\n"+self.input.content)
+        
+
+        
+        #wrapper section
+        device_name = self.input.content.get("device")
+
+        logger.info(f"current work path: {self.work_path}")
+        logger.info(f"executing nvme-cli command: {command}")
+        
+        # output,error file
+        command += f" > output.log"
+        command += f" 2> error.log"
+        
+        with subprocess.Popen(command, shell=True, 
+                              cwd=self.work_path, 
+                              stdout=subprocess.PIPE, 
+                              stderr=subprocess.PIPE, 
+                              text=True) as proc:
+
+            # wrong here, avoid wrong remove            
+            proc.stdin.write("N\n")
+            proc.stdin.flush()
+            
+            stdout, stderr = proc.communicate()
+            
+            if proc.returncode != 0:
+                raise RuntimeError(f"fio failed with error:\n{stderr}")
+        
+        logger.info("--purge task(nvme-cli) done--")
+        self.status = "done"
+        self._dump_workpath()
         
         pass

@@ -38,7 +38,6 @@ class TestPurgeTask(unittest.TestCase):
         
         _purge.run()
         
-        
         # file exists
         self.assertTrue(Path(_purge.get_file_directory("input.json")).exists())
         self.assertTrue(Path(_purge.get_file_directory("output")).exists())

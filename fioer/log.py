@@ -8,8 +8,8 @@ logging.basicConfig(
     level=level,
     format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
     datefmt="%m-%d %H:%M",
-#     filename="fioer.log",
-#     filemode="w",
+    # filename="fioer.log",
+    # filemode="w",
 )
 
 

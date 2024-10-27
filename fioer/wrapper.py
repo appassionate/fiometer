@@ -5,6 +5,13 @@ logger = get_logger(__name__)
 
 class FioWrapper:
     def __init__(self, work_path=".", fio_binary='fio', config_file="input.fio"):
+        """ init fio wrapper
+
+        Args:
+            work_path (str, optional): work path . Defaults to ".".
+            fio_binary (str, optional): fio executable binary location. Defaults to 'fio'.
+            config_file (str, optional): input file(ini type/*.fio). Defaults to "input.fio".
+        """        
         
         self.fio_binary = fio_binary
         self.config_file = config_file
@@ -13,11 +20,11 @@ class FioWrapper:
 
     def run(self, cli_params=None, output_file=None, error_file=None):
         """
-        执行 fio，传递 CLI 参数和配置文件。
+        eng: run fio, passing cli parameters and output/error file.
         
-        :param cli_params: 传递给 fio 的命令行参数，字典形式。
-        :param output_file: 如果指定，fio的输出将重定向到该文件中。
-        :return: 返回 fio 执行的输出。
+        :param cli_params: command line parameters, dict type
+        :param output_file: output file path
+        :return: process stdout
         """
         if not self.config_file:
             raise ValueError("No fio config file specified or created")

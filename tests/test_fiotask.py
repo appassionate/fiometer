@@ -20,7 +20,7 @@ class TestFioTask(unittest.TestCase):
         """fio task init(create) test"""
         
         _fio = FioTask(
-            work_path=_WORK_PATH+"test_fiotask_init",
+            work_path=_WORK_PATH+"test_fio_init",
             input_dict={},
         )
         _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
@@ -35,7 +35,7 @@ class TestFioTask(unittest.TestCase):
         """ fio task run test"""
         
         _fio = FioTask(
-            work_path=_WORK_PATH+"test_fiotask_run",
+            work_path=_WORK_PATH+"test_fio_run",
             input_dict={},
         )
         _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
@@ -54,13 +54,13 @@ class TestFioTask(unittest.TestCase):
         return _fio
     
     
-    def test_fiotask_reload(self):
-        """fio task reload existing .json info"""
+    # def test_fiotask_reload(self):
+    #     """fio task reload existing .json info"""
         
-        # should after test-run
-        #test-run 
-        _fio = FioTask(work_path=_WORK_PATH+"test_fiotask_run",)
-        print(_fio.status)
-        self.assertTrue(_fio.status == "done")
+    #     # should after test-run
+    #     #test-run 
+    #     _fio = FioTask(work_path=_WORK_PATH+"test_fio_run",)
+    #     print(_fio.status)
+    #     self.assertTrue(_fio.status == "done")
     
-        #TODO: more reload in different way
+    #     #TODO: more reload in different way

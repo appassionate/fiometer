@@ -214,6 +214,8 @@ class PurgeTask(JobBase):
             return
         self.status = "running"
         
+        
+        device_name = self.input.content.get("device")
         command = f"nvme format {device_name}"
         if not cli_params:
             cli_params = {}
@@ -226,18 +228,13 @@ class PurgeTask(JobBase):
         logger.info("current input:")
         logger.info("\n"+self.input.content)
         
-
-        
-        #wrapper section
-        device_name = self.input.content.get("device")
-
-        logger.info(f"current work path: {self.work_path}")
-        logger.info(f"executing nvme-cli command: {command}")
-        
         # output,error file
         command += f" > output.log"
         command += f" 2> error.log"
-        
+        #wrapper section
+        #wrapper info
+        logger.info(f"current work path: {self.work_path}")
+        logger.info(f"executing nvme-cli command: {command}")
         with subprocess.Popen(command, shell=True, 
                               cwd=self.work_path, 
                               stdout=subprocess.PIPE, 

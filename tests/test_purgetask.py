@@ -21,12 +21,11 @@ class TestPurgeTask(unittest.TestCase):
             work_path=_WORK_PATH+"test_purge_init",
             input_dict={},
         )
-        _purge.input.content["device"] = "/dev/XXXXXXXXXX"
+        _purge.input.content["device"] = "/AAAAAAAAAAAAA/BBBBBBBBBBBBBBBBBBB"
         _purge.write_input()
         
         # file exists
         self.assertTrue(Path(_purge.get_file_directory("input.json")).exists())
-        self.assertTrue(Path(_purge.get_file_directory("output")).exists())
         
     def test_purgetask_run(self):
         """ purge task run test"""

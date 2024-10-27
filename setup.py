@@ -13,9 +13,9 @@ setuptools.setup(
     ],
     python_requires='>=3.8',
     install_requires=[
-        #TODO: detailed dependencies 
-        # "numpy >= 1.19.5",
-        # "pandas",
+        "pydantic>=1.10.11",
+        "numpy >= 1.24.1",
+        "matplotlib >= 3.4.2",
   ],
     entry_points={
         'console_scripts': []

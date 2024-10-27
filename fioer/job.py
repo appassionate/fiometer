@@ -191,8 +191,9 @@ class PurgeTask(JobBase):
 
     def __init__(self, work_path, input_dict={}, **kwargs):
 
-        self.work_path = str(Path(work_path).absolute())
-        
+        _work_path = str(Path(work_path).absolute())
+        super().__init__(work_path=_work_path, **kwargs)  # pydantic init method
+
         self.input.content = input_dict
         self.executable = "nvme"
         
@@ -226,7 +227,7 @@ class PurgeTask(JobBase):
         
         logger.info("--run nvme-cli purge task--")
         logger.info("current input:")
-        logger.info("\n"+self.input.content)
+        logger.info("\n"+str(self.input.content))
         
         # output,error file
         command += f" > output.log"
@@ -241,6 +242,7 @@ class PurgeTask(JobBase):
                               stderr=subprocess.PIPE, 
                               text=True) as proc:
 
+            #FIXME: cant run now in subprocess 
             # wrong here, avoid wrong remove            
             proc.stdin.write("N\n")
             proc.stdin.flush()

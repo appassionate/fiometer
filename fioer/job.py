@@ -51,6 +51,25 @@ class JobBase(BaseModel):
         # using pydantic method to update data to the object
         # TODO: need refactor
         super().__init__(**_data)
+        
+    
+    def _create_scheme(self):
+        
+        # try to find existing job info to reload
+        if Path(self.work_path).exists():
+            try:
+                self._load_workpath()
+                logger.warning(
+                    "job info exists, reloaded, if u want create a new job, clean the work_path")
+            except:
+                logger.warning("job info corrupted, reinit")
+                Path(self.work_path).mkdir(parents=True, exist_ok=True)
+                self._dump_workpath()
+
+        else:
+            Path(self.work_path).mkdir(parents=True, exist_ok=False)
+            self._dump_workpath()
+        
 
 
 class FioTask(JobBase):
@@ -82,20 +101,7 @@ class FioTask(JobBase):
         self.view = FioView()
         self.view._load_job_info(self)
 
-        # try to find existing job info to reload
-        if Path(self.work_path).exists():
-            try:
-                self._load_workpath()
-                logger.warning(
-                    "job info exists, reloaded, if u want create a new job, clean the work_path")
-            except:
-                logger.warning("job info corrupted, reinit")
-                Path(self.work_path).mkdir(parents=True, exist_ok=True)
-                self._dump_workpath()
-
-        else:
-            Path(self.work_path).mkdir(parents=True, exist_ok=False)
-            self._dump_workpath()
+        self._create_scheme()
 
     def write_input(self):
 
@@ -119,8 +125,8 @@ class FioTask(JobBase):
 
         Args:
             cli_params (dict, optional): param dict listed for fio cli . Defaults to None. example: {"status-interval":"1"} to set the output interval to 1s
-        """       
-        
+        """
+
         if self.status == "done":
             logger.warning("job already done, if u want to rerun, clean the work_path")
             return
@@ -166,17 +172,45 @@ class FioTask(JobBase):
 # using the linux nvme-cli tool to implement the feature
 #ref: https://askubuntu.com/questions/1310338/how-to-secure-erase-a-nvme-ssd
 
-class PurgeTask(JobBase):
+#DANGER!!! this task will remove all the data on the nvme(ssd) device
 
-    def __init__(self, work_path, input_dict, **kwargs):
+class PurgeTask(JobBase):
+    
+    
+    class PurgeInput(BaseModel):
+        content: dict = {} # {"device": "/dev/nvmeXXX"}
+    
+    JOB_TYPE: str = "purge"
+    executable: str = "nvme"
+
+    input: PurgeInput = PurgeInput()
+    cli_params: Optional[dict] = {}
+    
+    def __repr__(self):
+        return f"PurgeTask(work_path={self.work_path}, status={self.status}, exec={self.executable}, cli_params={self.cli_params})"
+
+
+    def __init__(self, work_path, input_dict={}, **kwargs):
 
         self.work_path = str(Path(work_path).absolute())
+        
         self.input.content = input_dict
         self.executable = "nvme"
+        
+        self._create_scheme()
+
 
     def write_input(self):
-        # create work_dir if not exists
-        pass
+        
+        self.status = "created"
+        self._dump_workpath()
 
+        with open(Path(self.work_path) / "input.json", 'w') as f:
+            f.write(json.dumps(self.input.content))
+    
     def run(self, cli_params=None):
+        
+        
+        
+        
         pass

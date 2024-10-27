@@ -12,7 +12,6 @@ _WORK_PATH = '/tmp/fioer/test/'
 _TEMPLATE_DIR = Path(fioer.__file__).joinpath('../../templates').resolve()
 
 
-
 #test fioer.job.FioTask
 class TestFioTask(unittest.TestCase):
     

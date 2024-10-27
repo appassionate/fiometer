@@ -47,7 +47,7 @@ class FioWrapper:
         logger.info(f"current work path: {self.work_path}")
         logger.info(f"executing fio command: {command}")
 
-        # 执行命令
+        # execute
         with subprocess.Popen(command, shell=True, 
                               cwd=self.work_path, 
                               stdout=subprocess.PIPE, 

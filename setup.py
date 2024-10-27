@@ -16,6 +16,7 @@ setuptools.setup(
         "pydantic>=1.10.11",
         "numpy >= 1.24.1",
         "matplotlib >= 3.4.2",
+        "pytest >=7.1.2"
   ],
     entry_points={
         'console_scripts': []

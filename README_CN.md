@@ -56,12 +56,12 @@ size=10M
 
 ## 任务数据可视化示例
 从json输出得到图表，from data(parsed.json)
-
+可以 读/写可视化
 ```python
 randrw.view.view_iops(mode="write")
 randrw.view.view_latency(mode="write", lat_type="lat")
 ```
-or both plotted
+或者 读/写同时可视化
 ```python
 randrw.view.view_iops(mode="both")
 randrw.view.view_latency(mode="both", lat_type="lat")
@@ -69,7 +69,6 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 
 ### 如下图示例:
 
-example
 #### iops: read/write 可视化
 ![iops](./images/iops_rw.png)
 #### latency: read/write 可视化

@@ -13,9 +13,9 @@ from pathlib import Path
 
 template_file = "bala/randrw.fio"
 
-randw = FioTask(work_path="./randrw",input_dict=None,)
-randw.input.from_input_file(template_file)
-randw.run(cli_params={"status-interval":"1"})
+randrw = FioTask(work_path="./randrw",input_dict=None,)
+randrw.input.from_input_file(template_file)
+randrw.run(cli_params={"status-interval":"1"})
 ```
 
 使用模板文件 template: randrw.fio
@@ -58,13 +58,13 @@ size=10M
 从json输出得到图表，from data(parsed.json)
 
 ```python
-randw.view.view_iops(mode="write")
-randw.view.view_latency(mode="write", lat_type="lat")
+randrw.view.view_iops(mode="write")
+randrw.view.view_latency(mode="write", lat_type="lat")
 ```
 or both plotted
 ```python
-randw.view.view_iops(mode="both")
-randw.view.view_latency(mode="both", lat_type="lat")
+randrw.view.view_iops(mode="both")
+randrw.view.view_latency(mode="both", lat_type="lat")
 ```
 
 ### 如下图示例:

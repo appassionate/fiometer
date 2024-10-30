@@ -21,6 +21,13 @@ def _load_json(file):
 def _create_fig():
     return plt.subplots(figsize=(10, 3), dpi=_DPI)
 
+
+
+def _create_fig_both():
+    fig, axs = plt.subplots(2, 1, figsize=(10, 2 * 2), dpi=_DPI, gridspec_kw={'hspace': 0.7})
+    return fig, axs
+
+
 class FioView(BaseModel):
     
     
@@ -50,6 +57,12 @@ class FioView(BaseModel):
             _type_: fig, ax of matplotlib
         """
         
+        if mode=="both":
+            fig, axs = _create_fig_both()
+            self.view_latency(mode="write", lat_type=lat_type, job_num=job_num, ax=axs[0])
+            self.view_latency(mode="read" , lat_type=lat_type, job_num=job_num, ax=axs[1])
+            return fig, axs
+        
         output = _load_json(self.output)
         
         if lat_type not in LATENCY_TYPE:
@@ -69,9 +82,14 @@ class FioView(BaseModel):
         else:
             fig = ax.get_figure()
         
+        #color setting
+        if mode == "write":
+            _color = "b"
+        elif mode == "read":
+            _color = "r"
         # plot
-        ax.plot(range(len(output)), collect_lat_mean, label=f"{lat_type}_mean", color="b")
-        ax.plot(range(len(output)), collect_cum_lat_mean, label=f"{lat_type}_mean_cum", color="r")
+        ax.plot(range(len(output)), collect_lat_mean, label=f"{lat_type}_mean", color=_color)
+        ax.plot(range(len(output)), collect_cum_lat_mean, label=f"{lat_type}_mean_cum", color=_color, alpha=0.2)
         
         # add title and labels
         ax.set_title(f"{mode.upper()}: Latency: {lat_type.upper()} Over {lenframe} Frames")
@@ -100,7 +118,13 @@ class FioView(BaseModel):
 
         Returns:
             _type_: fig, ax of matplotlib
-        """        
+        """
+        
+        if mode=="both":
+            fig, axs = _create_fig_both()
+            self.view_iops(mode="write", job_num=job_num, ax=axs[0])
+            self.view_iops(mode="read", job_num=job_num, ax=axs[1])
+            return fig, axs
         
         output = _load_json(self.output)
         lenframe = len(output)
@@ -120,10 +144,15 @@ class FioView(BaseModel):
         else:
             fig = ax.get_figure()
 
+        #color setting
+        if mode == "write":
+            _color = "b"
+        elif mode == "read":
+            _color = "r"
         # plot iops
+        ax.plot(range(len(output)), collect_iops, label="iops", color=_color)
         ax.plot(range(len(output)), collect_iops_mean,
-                label="iops_mean", color="b")
-        ax.plot(range(len(output)), collect_iops, label="iops", color="r")
+        label="iops_mean", color=_color, alpha=0.2)
 
         # add title and labels
         ax.set_title(f"{mode.upper()}: IOPS Over {lenframe} Frames")

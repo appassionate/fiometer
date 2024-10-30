@@ -4,34 +4,35 @@ fioer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和
 [中文](./README_CN.md)/[English](./README.md)
 
 ## 使用示例 
-### 1. 随机写示例
+### 1. 随机读/写混合示例(65/35)
 
 ```python
 from fioer.job import FioTask
 import os
 from pathlib import Path
 
-template_file = "bala/randw.fio"
+template_file = "bala/randrw.fio"
 
-randw = FioTask(work_path="./randw",input_dict=None,)
+randw = FioTask(work_path="./randrw",input_dict=None,)
 randw.input.from_input_file(template_file)
 randw.run(cli_params={"status-interval":"1"})
 ```
 
-使用模板文件 template: randw.fio
+使用模板文件 template: randrw.fio
+读写比例 r/w = 65/35
 ```ini
 [global]
 name=fio-rand-write
 filename=fio-rand-write
-rw=randwrite
+rw=randrw
 bs=4K
 direct=1
-numjobs=8
+numjobs=1
 time_based=1
 runtime=200
 ioengine=libaio
-iodepth=16
-
+iodepth=64
+rwmixread=65
 
 [file1]
 size=10M
@@ -60,9 +61,18 @@ size=10M
 randw.view.view_iops(mode="write")
 randw.view.view_latency(mode="write", lat_type="lat")
 ```
-如图所示
+or both plotted
+```python
+randw.view.view_iops(mode="both")
+randw.view.view_latency(mode="both", lat_type="lat")
+```
 
-![iops](./images/iops.png)
-![latency-total](./images/latency.png)
-总延迟-时间变化 (per job)
+### 如下图示例:
+
+example
+#### iops: read/write 可视化
+![iops](./images/iops_rw.png)
+#### latency: read/write 可视化
+![latency](./images/lat_rw.png)
+#### latency per job:
 ![latency-total](./images/lat_perjob.png)

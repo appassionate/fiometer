@@ -70,7 +70,7 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 ### example
 
 gfio like:
-![iops_bw_r](./images/iops_bw_r.png) 
+![iops_bw_r](https://img.picui.cn/free/2024/10/31/6723a9604fbfd.png) 
 ![iops_bw_w](https://img.picui.cn/free/2024/10/31/6723a94ea84cc.png)
 
 iops: read/write both plotted

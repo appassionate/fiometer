@@ -106,14 +106,10 @@ class FioView(BaseModel):
         ax.grid(True)
         ax.legend()
         
-        
         #grid setting: "--"
         ax.grid(True, linestyle='--')
-        
-        
         #add extra text
         draw_jobnum_text(ax, job_num)
-        
         
         return fig, ax
 
@@ -180,8 +176,7 @@ class FioView(BaseModel):
 
         #add extra text
         draw_jobnum_text(ax, job_num)
-        # show
-        plt.show()
+
         return fig, ax
 
 

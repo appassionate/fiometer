@@ -26,10 +26,10 @@ def _create_fig_both():
     fig, axs = plt.subplots(2, 1, figsize=(10, 2 * 2), dpi=_DPI, gridspec_kw={'hspace': 0.7})
     return fig, axs
 
-def draw_jobnum_text(ax, job_num):
+def _draw_jobnum_text(ax, job_num):
     
-    ax.text(0, 0, f"job: No.{job_num}", color="black", weight="bold",
-            verticalalignment='top', horizontalalignment='left',)
+    # add text : top-left, 
+    ax.set_title(f"job: No.{job_num}", loc="left", fontsize=12, color="black")
 
 
 
@@ -108,7 +108,7 @@ class FioView(BaseModel):
         #grid setting: "--"
         ax.grid(True, linestyle='--')
         #add extra text
-        draw_jobnum_text(ax, job_num)
+        _draw_jobnum_text(ax, job_num)
         
         return fig, ax
 
@@ -174,7 +174,7 @@ class FioView(BaseModel):
         ax.grid(True, linestyle='--')
 
         #add extra text
-        draw_jobnum_text(ax, job_num)
+        _draw_jobnum_text(ax, job_num)
 
         return fig, ax
 

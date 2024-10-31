@@ -79,3 +79,9 @@ latency: read/write both plotted
 ![latency](./images/lat_rw.png)
 latency per job:
 ![latency-total](./images/lat_perjob.png)
+
+
+### TODO LIST
+1. write amplification flow/test-case
+2. snia standard flow/test-case
+3. QoS flow/test-case

@@ -69,6 +69,10 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 
 ### 如下图示例:
 
+gfio like:
+![iops_bw_r](https://img.picui.cn/free/2024/10/31/6723a9604fbfd.png) 
+![iops_bw_w](https://img.picui.cn/free/2024/10/31/6723a94ea84cc.png)
+
 #### iops: read/write 可视化
 ![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
 

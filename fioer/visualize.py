@@ -29,8 +29,8 @@ def _create_fig_both():
 def _draw_jobnum_text(ax, job_num):
     
     # add text : top-left, 
-    ax.set_title(f"job: No.{job_num}", loc="left", fontsize=12, color="black")
-
+    # ax.set_title(f"job: No.{job_num}", loc="left", fontsize=12, color="black")
+    pass
 
 
 class FioView(BaseModel):
@@ -97,7 +97,7 @@ class FioView(BaseModel):
         ax.plot(range(len(output)), collect_cum_lat_mean, label=f"{lat_type}_mean_cum", color=_color, alpha=0.2)
         
         # add title and labels
-        ax.set_title(f"{mode.upper()}: Latency: {lat_type.upper()} Over {lenframe} Frames")
+        ax.set_title(f"{mode.upper()}: Latency (μs): {lat_type.upper()} Over {lenframe} Frames")
         ax.set_xlabel("Time (Frame)")
         ax.set_ylabel("Latency (μs)")
         
@@ -116,7 +116,7 @@ class FioView(BaseModel):
         """ view one job iops over frames
 
         Args:
-            mode (_type_): write/read/randwrite/randread
+            mode (_type_): write/read/both
             job_num (int, optional): which job to view. Defaults to index: 0
             ax (_type_, optional): ax for overview or other fig, ax pair, Defaults to None
 
@@ -159,9 +159,9 @@ class FioView(BaseModel):
         label="iops_mean", color=_color, alpha=0.2)
 
         # add title and labels
-        ax.set_title(f"{mode.upper()}: IOPS Over {lenframe} Frames")
-        ax.set_xlabel("Time (s)")
-        ax.set_ylabel("IOPS")
+        ax.set_title(f"{mode.upper()}: IOPS (IOs/sec) Over {lenframe} Frames")
+        ax.set_xlabel("Time (Frame)")
+        ax.set_ylabel("IOPS (IOs/sec)")
 
         # show grid and legend
         ax.grid(True)
@@ -178,6 +178,90 @@ class FioView(BaseModel):
 
         return fig, ax
 
+    def view_bw(self, mode, job_num=0, ax=None):
+        """ view one job bandwidth over frames
+
+        Args:
+            mode (_type_): write/read/both
+            job_num (int, optional): which job to view. Defaults to index: 0
+            ax (_type_, optional): ax for overview or other fig, ax pair, Defaults to None
+
+        Returns:
+            _type_: fig, ax of matplotlib
+        """
+        
+        #FIXME: HOW TO SUPPORT BOTH MODE?
+        
+        if mode=="both":
+            fig, axs = _create_fig_both()
+            self.view_bw(mode="write", job_num=job_num, ax=axs[0])
+            self.view_bw(mode="read", job_num=job_num, ax=axs[1])
+            return fig, axs
+        
+        output = _load_json(self.output)
+        lenframe = len(output)
+
+        collect_bw_mean = [frame["jobs"][0][mode]["bw"] for frame in output]
+        collect_bw = [frame["jobs"][0][mode]["bw_mean"] for frame in output]
+
+        # fig, ax
+        if not ax:
+            fig, ax = plt.subplots(figsize=(10, 3), dpi=_DPI)
+        else:
+            fig = ax.get_figure()
+
+        # color setting
+        if mode == "write":
+            _color = "b"
+        elif mode == "read":
+            _color = "r"
+        # plot iops
+        ax.plot(range(len(output)), collect_bw, label="bw", color=_color)
+        ax.plot(range(len(output)), collect_bw_mean,
+        label="bw_mean", color=_color, alpha=0.2)
+
+        # add title and labels
+        ax.set_title(f"{mode.upper()}: Bandwidth (KB/s) Over {lenframe} Frames")
+        ax.set_xlabel("Time (Frame)")
+        ax.set_ylabel("Bandwidth (KB/s)")
+
+        # show grid and legend
+        ax.grid(True)
+        ax.legend()
+
+        # ax.set_xlim(0,100)
+        # ax.set_ylim(0,1000000)
+
+        # grid setting: "--"
+        ax.grid(True, linestyle='--')
+
+        #add extra text
+        _draw_jobnum_text(ax, job_num)
+
+        return fig, ax
+
+
+    def view_iops_bw(self, mode, job_num=0, ax=None):
+        """ view one job iops and bandwidth over frames
+
+        Args:
+            mode (_type_): write/read/both
+            job_num (int, optional): which job to view. Defaults to index: 0
+            ax (_type_, optional): ax for overview or other fig, ax pair, Defaults to None
+
+        Returns:
+            _type_: fig, ax of matplotlib
+        """
+        
+        # fig, ax
+        fig, ax = plt.subplots(1, 2, figsize=(10, 3), dpi=_DPI, gridspec_kw={'hspace': 1,"wspace": 0.3}) 
+        self.view_bw(mode=mode, job_num=job_num, ax=ax[0])
+        self.view_iops(mode=mode, job_num=job_num, ax=ax[1])
+
+        return fig, ax
+        
+        
+        
 
     def overview_latency(self, mode="write", lat_type="lat", dpi=300):
         """overview latency of all jobs

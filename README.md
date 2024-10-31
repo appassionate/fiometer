@@ -67,7 +67,12 @@ randrw.view.view_iops(mode="both")
 randrw.view.view_latency(mode="both", lat_type="lat")
 ```
 
-example
+### example
+
+gfio like:
+![iops_bw_r](./images/iops_bw_r.png) 
+![iops_bw_w](https://img.picui.cn/free/2024/10/31/6723a94ea84cc.png)
+
 iops: read/write both plotted
 ![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
 latency: read/write both plotted

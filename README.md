@@ -8,8 +8,6 @@ python wrapper and default test settings for fio, ssd-test oriented
 
 ```python
 from fioer.job import FioTask
-import os
-from pathlib import Path
 
 template_file = "bala/randrw.fio"
 

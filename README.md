@@ -69,7 +69,7 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 
 example
 iops: read/write both plotted
-![iops](./images/iops_rw.png)
+![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
 latency: read/write both plotted
 ![latency](./images/lat_rw.png)
 latency per job:

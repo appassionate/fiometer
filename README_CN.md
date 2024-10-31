@@ -70,7 +70,9 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 ### 如下图示例:
 
 #### iops: read/write 可视化
-![iops](./images/iops_rw.png)
+![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
+
+
 #### latency: read/write 可视化
 ![latency](./images/lat_rw.png)
 #### latency per job:

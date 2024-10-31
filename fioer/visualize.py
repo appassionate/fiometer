@@ -29,8 +29,7 @@ def _create_fig_both():
 def draw_jobnum_text(ax, job_num):
     
     ax.text(0, 0, f"job: No.{job_num}", color="black", weight="bold",
-            verticalalignment='top', horizontalalignment='left',
-            transform=ax.transAxes)
+            verticalalignment='top', horizontalalignment='left',)
 
 
 

@@ -8,8 +8,6 @@ fioer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和
 
 ```python
 from fioer.job import FioTask
-import os
-from pathlib import Path
 
 template_file = "bala/randrw.fio"
 

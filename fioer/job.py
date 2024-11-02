@@ -149,8 +149,8 @@ class FioTask(JobBase):
         self.write_input()
         # using fio wrapper to run the job
         logger.info("--run fio task--")
-        logger.info("current input.fio:")
-        logger.info("\n"+self.input.render_dict())
+        logger.debug("current input.fio:")
+        logger.debug("\n"+self.input.render_dict())
 
         fio = FioWrapper(work_path=str(self.work_path),
                          fio_binary=self.executable,

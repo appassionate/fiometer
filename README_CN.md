@@ -83,8 +83,9 @@ gfio like:
 
 
 ### SNIA IOPs 测试流程 草图
-<div style="text-align: center;">
+<div >
     <img src="./images/flow_sina_poc.png" alt="Description" width="400">
+    <img src="./images/log.png" alt="Description" width="700">
 </div>
 
 #### latency: read/write 可视化

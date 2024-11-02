@@ -83,7 +83,7 @@ gfio like:
 
 
 ### SNIA IOPs 测试流程 草图
-![latency](https://img.picui.cn/free/2024/11/02/6725e1db3fe33.png)
+![snia_3d](https://img.picui.cn/free/2024/11/02/6725e30e5414e.png)
 
 #### latency: read/write 可视化
 ![latency](./images/lat_rw.png)

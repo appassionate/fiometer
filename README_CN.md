@@ -51,7 +51,6 @@ size=10M
 | `Cache` | `direct=1` | direct IO |
 
 
-
 ## 任务数据可视化示例
 从json输出得到图表，from data(parsed.json)
 可以 读/写可视化
@@ -65,6 +64,14 @@ randrw.view.view_iops(mode="both")
 randrw.view.view_latency(mode="both", lat_type="lat")
 ```
 
+## SNIA IOPs 测试流程(未完成，开发中)
+参照snia pts v2.0.1, 第七章psedo code
+```python
+from fioer.flow import flow_snia_iops
+flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
+```
+
+
 ### 如下图示例:
 
 gfio like:
@@ -74,6 +81,9 @@ gfio like:
 #### iops: read/write 可视化
 ![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
 
+
+### SNIA IOPs 测试流程 草图
+![latency](https://img.picui.cn/free/2024/11/02/6725e1db3fe33.png)
 
 #### latency: read/write 可视化
 ![latency](./images/lat_rw.png)

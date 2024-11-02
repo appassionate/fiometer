@@ -9,6 +9,9 @@ _DPI = 600
 LATENCY_TYPE = ("slat", "clat", "lat")
 
 
+
+
+
 def cumsum(array):
     return np.cumsum(array) / np.arange(1, len(array) + 1)
 

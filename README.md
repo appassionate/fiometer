@@ -65,6 +65,13 @@ randrw.view.view_iops(mode="both")
 randrw.view.view_latency(mode="both", lat_type="lat")
 ```
 
+## SNIA IOPs test flow(developing)
+accroding to snia pts psedo code
+```python
+from fioer.flow import flow_snia_iops
+flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
+```
+
 ### example
 
 gfio like:

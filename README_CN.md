@@ -79,7 +79,7 @@ gfio like:
 ![iops_bw_w](https://img.picui.cn/free/2024/10/31/6723a94ea84cc.png)
 
 #### iops: read/write 可视化
-![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
+![iops](./images/flow_sina_poc.png)
 
 
 ### SNIA IOPs 测试流程 草图

@@ -36,6 +36,32 @@ class JobBase(BaseModel):
     def get_file_directory(self, filename):
         return Path(self.work_path).joinpath(filename).absolute()
 
+    def clean(self, ignore=False):
+        
+        # confirm to clean the work_path
+
+        if not ignore:
+            _input = input(f"Are you sure to clean the work_path: {self.work_path}? (y/n)")
+            if _input.lower() != "y":
+                return
+        
+        # clean the work_path
+        work_path = Path(self.work_path)
+        if work_path.exists():
+            for file in work_path.iterdir():
+                if file.is_file():
+                    file.unlink()
+                elif file.is_dir():
+                    for subfile in file.iterdir():
+                        subfile.unlink()
+                    file.rmdir()
+            work_path.rmdir()
+            logger.info(f"work_path cleaned: {work_path}")
+        else:
+            logger.info(f"work_path not exists: {work_path}")
+        
+    
+    
     # serialize from file related
 
     def _dump_workpath(self):

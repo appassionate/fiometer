@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+from functools import cached_property
 
 _DPI = 600
 LATENCY_TYPE = ("slat", "clat", "lat")
@@ -45,9 +46,15 @@ class FioView(BaseModel):
     def _load_job_info(self, job):
         self.work_path = job.work_path
 
-    @property
+    @cached_property
     def output(self):
-        return str(Path(self.work_path).joinpath(self.file_output).absolute())
+        # cache output data
+        output_dir = Path(self.work_path).joinpath(self.file_output).absolute()
+        if not output_dir.exists():
+            raise FileNotFoundError(f"file not found: {output_dir}")
+        with open(output_dir, "r") as f:
+            data = json.load(f)
+        return data
 
     def view_latency(self, mode="write", lat_type="lat", job_num=0, ax=None):
         """_summary_
@@ -71,7 +78,7 @@ class FioView(BaseModel):
             self.view_latency(mode="read" , lat_type=lat_type, job_num=job_num, ax=axs[1])
             return fig, axs
         
-        output = _load_json(self.output)
+        output = self.output
         
         if lat_type not in LATENCY_TYPE:
             raise ValueError(f"latency type not supported: {lat_type}")
@@ -133,7 +140,7 @@ class FioView(BaseModel):
             self.view_iops(mode="read", job_num=job_num, ax=axs[1])
             return fig, axs
         
-        output = _load_json(self.output)
+        output = self.output
         lenframe = len(output)
 
         collect_iops_mean = [frame["jobs"][0][mode]["iops"] for frame in output]
@@ -201,7 +208,7 @@ class FioView(BaseModel):
             self.view_bw(mode="read", job_num=job_num, ax=axs[1])
             return fig, axs
         
-        output = _load_json(self.output)
+        output = self.output
         lenframe = len(output)
 
         collect_bw_mean = [frame["jobs"][0][mode]["bw"] for frame in output]
@@ -279,7 +286,7 @@ class FioView(BaseModel):
         """        
 
         # graph: overview, contains n*1 sub-graphs
-        output = _load_json(self.output)
+        output = self.output
         job_num = len(output[0]["jobs"])
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
 
@@ -307,7 +314,7 @@ class FioView(BaseModel):
         # TODO: dpi imple
 
         # graph: overview, contains n*1 sub-graphs
-        output = _load_json(self.output)
+        output = self.output
         job_num = len(output[0]["jobs"])
         fig, axs = plt.subplots(job_num, 1, figsize=(10, 2 * job_num), dpi=_DPI, gridspec_kw={'hspace': 1})
 

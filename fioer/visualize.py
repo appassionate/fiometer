@@ -10,8 +10,10 @@ _DPI = 600
 LATENCY_TYPE = ("slat", "clat", "lat")
 
 
-
-
+class ViewCache():
+    data = {}
+#singleton for cache output, avoid pydantic lock
+vcache = ViewCache()    
 
 def cumsum(array):
     return np.cumsum(array) / np.arange(1, len(array) + 1)
@@ -46,16 +48,22 @@ class FioView(BaseModel):
     def _load_job_info(self, job):
         self.work_path = job.work_path
 
-    @cached_property
+    @property
     def output(self):
+        
+        if self.work_path in vcache.data:
+            return vcache.data[self.work_path]
         # cache output data
         output_dir = Path(self.work_path).joinpath(self.file_output).absolute()
         if not output_dir.exists():
             raise FileNotFoundError(f"file not found: {output_dir}")
         with open(output_dir, "r") as f:
             data = json.load(f)
-        return data
+        vcache.data[self.work_path] = data
+        
+        return vcache.data[self.work_path]
 
+    
     def view_latency(self, mode="write", lat_type="lat", job_num=0, ax=None):
         """_summary_
 

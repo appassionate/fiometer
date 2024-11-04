@@ -75,7 +75,6 @@ class JobBase(BaseModel):
         # TODO: need refactor
         super().__init__(**_data)
         
-    
     def _create_scheme(self):
         
         # try to find existing job info to reload

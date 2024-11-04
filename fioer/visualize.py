@@ -4,11 +4,12 @@ from pydantic import BaseModel
 import numpy as np
 import json
 import matplotlib.pyplot as plt
-from functools import cached_property
+from .log import get_logger
 
 _DPI = 600
 LATENCY_TYPE = ("slat", "clat", "lat")
 
+logger = get_logger(__name__)
 
 class ViewCache():
     data = {}
@@ -38,6 +39,13 @@ def _draw_jobnum_text(ax, job_num):
     # ax.set_title(f"job: No.{job_num}", loc="left", fontsize=12, color="black")
     pass
 
+def get_job_names(output):
+    jobnames = [job["jobname"] for job in output[0]["jobs"]]
+    return list(set(jobnames))
+
+def filter_job_by_name(output, jobname):
+    jobs = [job for job in output[0]["jobs"] if job["jobname"] == jobname]
+    return jobs
 
 class FioView(BaseModel):
     
@@ -59,11 +67,17 @@ class FioView(BaseModel):
             raise FileNotFoundError(f"file not found: {output_dir}")
         with open(output_dir, "r") as f:
             data = json.load(f)
+        logger.debug(f"loaded output once from {output_dir}.")
         vcache.data[self.work_path] = data
         
         return vcache.data[self.work_path]
 
+    @property
+    def job_names(self):
+        output = self.output
+        return get_job_names(output)
     
+    #TODO: can view the by jobname and jobnum
     def view_latency(self, mode="write", lat_type="lat", job_num=0, ax=None):
         """_summary_
 
@@ -318,7 +332,6 @@ class FioView(BaseModel):
             _type_: fig, ax of matplotlib
         """        
         
-        # TODO: cache the output json data, load once
         # TODO: dpi imple
 
         # graph: overview, contains n*1 sub-graphs

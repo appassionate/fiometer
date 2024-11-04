@@ -60,9 +60,6 @@ class JobBase(BaseModel):
         else:
             logger.info(f"work_path not exists: {work_path}")
         
-    
-    
-    # serialize from file related
 
     def _dump_workpath(self):
 
@@ -96,7 +93,6 @@ class JobBase(BaseModel):
             Path(self.work_path).mkdir(parents=True, exist_ok=False)
             self._dump_workpath()
         
-
 
 class FioTask(JobBase):
 
@@ -165,7 +161,7 @@ class FioTask(JobBase):
         if not cli_params:
             cli_params = {}
         # TODO: here still consider the normal log output
-        # for it will remained the interrupted log
+        # for it will remain the interrupted log
         format_type = "json"
         if format_type == "json":
             # set output file format: json, need test

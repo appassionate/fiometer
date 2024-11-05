@@ -156,7 +156,7 @@ class FioView(BaseModel):
         #grid setting: "--"
         ax.grid(True, linestyle='--')
         #add extra text
-        # _draw_jobnum_text(ax, job_num)
+        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
         
         return fig, ax
 
@@ -174,8 +174,8 @@ class FioView(BaseModel):
         
         if mode=="both":
             fig, axs = _create_fig_both()
-            self.view_iops(mode="write", job_name=None, job_num=job_num, ax=axs[0])
-            self.view_iops(mode="read",  job_name=None, job_num=job_num, ax=axs[1])
+            self.view_iops(mode="write", job_name=job_name, job_num=job_num, ax=axs[0])
+            self.view_iops(mode="read",  job_name=job_name, job_num=job_num, ax=axs[1])
             return fig, axs
         
         output = self.output
@@ -222,7 +222,7 @@ class FioView(BaseModel):
         ax.grid(True, linestyle='--')
 
         #add extra text
-        # _draw_jobnum_text(ax, job_num)
+        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
 
         return fig, ax
 
@@ -285,7 +285,7 @@ class FioView(BaseModel):
         ax.grid(True, linestyle='--')
 
         #add extra text
-        #_draw_jobnum_text(ax, job_num)
+        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
 
         return fig, ax
 
@@ -301,7 +301,7 @@ class FioView(BaseModel):
         Returns:
             _type_: fig, ax of matplotlib
         """
-        
+        #BUG
         # fig, ax
         fig, ax = plt.subplots(1, 2, figsize=(10, 3), dpi=_DPI, gridspec_kw={'hspace': 1,"wspace": 0.3}) 
         self.view_bw(mode=mode, job_name=job_name, job_num=job_num, ax=ax[0])

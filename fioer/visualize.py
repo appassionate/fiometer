@@ -84,12 +84,21 @@ class FioView(BaseModel):
         if not job_name:
             job_name = self.job_names[0]
             logger.info(f"job_name not specified, using the first job name: {job_name}")
+            logger.info(f"valid job names: {self.job_names}")
         # TODO: deepcopy will be slow
         _output = copy.deepcopy(self.output)
         for frame in _output:
             frame["jobs"] = [job for job in frame["jobs"] if job["jobname"] == job_name]
 
         return _output
+    
+    def get_job_dataframe(self, job_name=None, job_num=0):
+        
+        import pandas as pd
+        output = self.filter_output_by_name(job_name)
+        frames = [ _frame["jobs"][job_num][mode] for _frame in output]
+        
+        return pd.DataFrame(frames)
     
     
     #TODO: can view the by jobname and jobnum
@@ -146,6 +155,8 @@ class FioView(BaseModel):
         
         # add title and labels
         ax.set_title(f"{mode.upper()}: Latency (μs): {lat_type.upper()} Over {lenframe} Frames")
+        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
+        
         ax.set_xlabel("Time (Frame)")
         ax.set_ylabel("Latency (μs)")
         
@@ -156,11 +167,10 @@ class FioView(BaseModel):
         #grid setting: "--"
         ax.grid(True, linestyle='--')
         #add extra text
-        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
         
         return fig, ax
 
-    def view_iops(self, mode, job_name=None, job_num=0, ax=None):
+    def view_iops(self, mode, job_name=None, job_num=0, ax=None, show_title=True):
         """ view one job iops over frames
 
         Args:
@@ -207,7 +217,10 @@ class FioView(BaseModel):
         ax.plot(range(len(output)), collect_iops_mean, label="iops_mean", color=_color, alpha=0.2)
 
         # add title and labels
-        ax.set_title(f"{mode.upper()}: IOPS (IOs/sec) Over {lenframe} Frames")
+        if show_title:
+            ax.set_title(f"{mode.upper()}: IOPS (IOs/sec) Over {lenframe} Frames")
+            _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
+        
         ax.set_xlabel("Time (Frame)")
         ax.set_ylabel("IOPS (IOs/sec)")
 
@@ -221,12 +234,11 @@ class FioView(BaseModel):
         # grid setting: "--"
         ax.grid(True, linestyle='--')
 
-        #add extra text
-        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
+
 
         return fig, ax
 
-    def view_bw(self, mode, job_name=None, job_num=0, ax=None):
+    def view_bw(self, mode, job_name=None, job_num=0, ax=None, show_title=True):
         """ view one job bandwidth over frames
 
         Args:
@@ -270,7 +282,9 @@ class FioView(BaseModel):
         label="bw_mean", color=_color, alpha=0.2)
 
         # add title and labels
-        ax.set_title(f"{mode.upper()}: Bandwidth (KB/s) Over {lenframe} Frames")
+        if show_title:
+            ax.set_title(f"{mode.upper()}: Bandwidth (KB/s) Over {lenframe} Frames")
+            _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
         ax.set_xlabel("Time (Frame)")
         ax.set_ylabel("Bandwidth (KB/s)")
 
@@ -283,9 +297,6 @@ class FioView(BaseModel):
 
         # grid setting: "--"
         ax.grid(True, linestyle='--')
-
-        #add extra text
-        _draw_jobnum_text(ax, job_name, job_num+1, len(output[0]["jobs"]))
 
         return fig, ax
 
@@ -301,15 +312,14 @@ class FioView(BaseModel):
         Returns:
             _type_: fig, ax of matplotlib
         """
-        #BUG
         # fig, ax
         fig, ax = plt.subplots(1, 2, figsize=(10, 3), dpi=_DPI, gridspec_kw={'hspace': 1,"wspace": 0.3}) 
-        self.view_bw(mode=mode, job_name=job_name, job_num=job_num, ax=ax[0])
-        self.view_iops(mode=mode, job_name=job_name, job_num=job_num, ax=ax[1])
+        self.view_bw(mode=mode, job_name=job_name, job_num=job_num, ax=ax[0],show_title=False)
+        self.view_iops(mode=mode, job_name=job_name, job_num=job_num, ax=ax[1],show_title=False)
 
         return fig, ax
         
-        
+
         
     # #BUG: job_name not implemented
     # def overview_latency(self, mode="write", lat_type="lat", dpi=300):

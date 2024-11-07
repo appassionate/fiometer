@@ -75,6 +75,10 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
             logger.info(f"start IOPs rwmix-bs mapping task: rwmix-{rwmix}/{100-rwmix} bs-{bs}")
             
             # TODO: converge task resume
+            # max round set to 25, if not converge, then stop
+            # _tasks_round = []
+            # for _round in max_round:
+                
             wd_precond = FioTask(pr.joinpath(f"step03.mapping_{rwmix}-{100-rwmix}_bs_{bs}"))
             wd_precond.input.content["global"] = {
                 "name":f"rwmix_bs",
@@ -97,6 +101,9 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
             logger.info(f"IOPs rwmix-bs mapping task: rwmix-{rwmix}/{100-rwmix} bs-{bs} finished")
             
             #TODO convergence check
+            #_res = check_convergence(tasks_round)
+            # if converged, then break
+            # get iops-(bs, rwmix) data
     
     # TODO: reporting
     

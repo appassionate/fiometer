@@ -1,0 +1,35 @@
+{
+  "JOB_TYPE": "fio",
+  "work_path": "/home/tempest/devops/fio/test/randrw65",
+  "executable": "fio",
+  "status": "done",
+  "input": {
+    "content": {
+      "global": {
+        "name": "fio-rand-write",
+        "filename": "fio-rand-write",
+        "rw": "randrw",
+        "bs": "4K",
+        "direct": "1",
+        "numjobs": 1,
+        "time_based": "1",
+        "runtime": 200,
+        "ioengine": "libaio",
+        "iodepth": 64,
+        "rwmixread": 65
+      },
+      "file1": {
+        "size": "10M"
+      }
+    }
+  },
+  "view": {
+    "work_path": "/home/tempest/devops/fio/test/randrw65",
+    "file_output": "parsed.json"
+  },
+  "cli_params": {
+    "status-interval": "1",
+    "output-format": "json",
+    "output": "output.json"
+  }
+}

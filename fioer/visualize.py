@@ -1,7 +1,8 @@
 from pathlib import Path
 import copy
+from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -52,7 +53,7 @@ def get_job_names(output):
 class FioView(BaseModel):
     
     
-    work_path: str = ""
+    work_path: Optional[str] = Field(None, exclude=True)
     file_output: str = "parsed.json"
     
     def _load_job_info(self, job):

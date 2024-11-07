@@ -59,7 +59,6 @@ class JobBase(BaseModel):
             logger.info(f"work_path cleaned: {work_path}")
         else:
             logger.info(f"work_path not exists: {work_path}")
-        
 
     def _dump_workpath(self):
 
@@ -77,12 +76,19 @@ class JobBase(BaseModel):
         
     def _create_scheme(self):
         
+        new_work_path = self.work_path
         # try to find existing job info to reload
         if Path(self.work_path).exists():
             try:
                 self._load_workpath()
-                logger.warning(
-                    "job info exists, reloaded, if u want create a new job, clean the work_path")
+                logger.warning("job info exists, reloaded, if u want create a new job, clean the work_path")
+                # work_path info reloaded from .json file
+                old_work_path = self.work_path
+                if self.work_path != new_work_path:
+                    logger.warning(f"job old work_path:{old_work_path} not match, reset by current work_path")
+                    self.work_path = new_work_path
+                    self._dump_workpath()
+
             except:
                 logger.warning("job info corrupted, reinit")
                 Path(self.work_path).mkdir(parents=True, exist_ok=True)
@@ -91,6 +97,10 @@ class JobBase(BaseModel):
         else:
             Path(self.work_path).mkdir(parents=True, exist_ok=False)
             self._dump_workpath()
+
+    def _refresh_work_path(self, work_path):
+        self.work_path = work_path
+        self._dump_workpath()
         
 
 class FioTask(JobBase):
@@ -119,10 +129,10 @@ class FioTask(JobBase):
 
         # TODO: refactor input
         self.input.content = input_dict
+        self._create_scheme()
+        # after create scheme, extra view module will be loaded the job info
         self.view = FioView()
         self.view._load_job_info(self)
-
-        self._create_scheme()
 
     def write_input(self):
 

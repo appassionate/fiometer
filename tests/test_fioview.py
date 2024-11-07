@@ -12,7 +12,7 @@ _SAMPLE_DIR = Path(fioer.__file__).joinpath('../../tests/samples').resolve()
 @pytest.fixture
 def setup_fiotask():
     _fio = FioTask(
-        work_path=_TEMPLATE_DIR+"/randrw65",
+        work_path=_SAMPLE_DIR+"/randrw65",
         input_dict={},
     )
     return _fio

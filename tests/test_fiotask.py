@@ -1,66 +1,50 @@
-import unittest
-import shutil
+import pytest
 from pathlib import Path
+import shutil
+import unittest
 
 import fioer
 from fioer.job import FioTask
-import pytest
-# from pytest_dependency import depends
-
 
 _WORK_PATH = '/tmp/fioer/test/'
 _TEMPLATE_DIR = Path(fioer.__file__).joinpath('../../templates').resolve()
 
 
-#test fioer.job.FioTask
-class TestFioTask(unittest.TestCase):
+@pytest.fixture
+def setup_fiotask():
     
-    
-    def test_fiotask_init(self):
-        """fio task init(create) test"""
-        
-        _fio = FioTask(
-            work_path=_WORK_PATH+"test_fio_init",
-            input_dict={},
-        )
-        _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
-        _fio.write_input()
-        
-        # file exists
-        self.assertTrue(Path(_fio.get_file_directory("input.fio")).exists())
-        self.assertTrue(Path(_fio.get_file_directory(".fioer_info.json")).exists())
+    _fio = FioTask(
+        work_path=_WORK_PATH+"test_fio_run",
+        input_dict={},
+    )
+    return _fio
 
+def test_fiotask_init(setup_fiotask):
+    """fio task init(create) test"""
+    
+    _fio = setup_fiotask
+    _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
+    _fio.write_input()
+    
+    # file exists
+    assert Path(_fio.get_file_directory("input.fio")).exists()
+    assert Path(_fio.get_file_directory(".fioer_info.json")).exists()
+    
 
-    def test_fiotask_run(self):
-        """ fio task run test"""
-        
-        _fio = FioTask(
-            work_path=_WORK_PATH+"test_fio_run",
-            input_dict={},
-        )
-        _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
-        _fio.run()
-        
-        # file exists
-        self.assertTrue(Path(_fio.get_file_directory("input.fio")).exists())
-        self.assertTrue(Path(_fio.get_file_directory(".fioer_info.json")).exists())
-        self.assertTrue(Path(_fio.get_file_directory("output.json")).exists())
-        self.assertTrue(Path(_fio.get_file_directory("parsed.json")).exists())
-        _fio._load_workpath()
-        self.assertTrue(_fio.status == "done")
+def test_fiotask_run(setup_fiotask):
+    """fio task run test"""
+    
+    _fio = setup_fiotask
+    _fio.input.from_input_file(_TEMPLATE_DIR.joinpath('example.fio'))
+    _fio.run()
+    
+    # file exists
+    assert Path(_fio.get_file_directory("input.fio")).exists()
+    assert Path(_fio.get_file_directory(".fioer_info.json")).exists()
+    assert Path(_fio.get_file_directory("output.json")).exists()
+    assert Path(_fio.get_file_directory("parsed.json")).exists()
+    _fio._load_workpath()
+    assert _fio.status == "done"
+    
+    return _fio
 
-        self._fio_run  = _fio
-        
-        return _fio
-    
-    
-    # def test_fiotask_reload(self):
-    #     """fio task reload existing .json info"""
-        
-    #     # should after test-run
-    #     #test-run 
-    #     _fio = FioTask(work_path=_WORK_PATH+"test_fio_run",)
-    #     print(_fio.status)
-    #     self.assertTrue(_fio.status == "done")
-    
-    #     #TODO: more reload in different way

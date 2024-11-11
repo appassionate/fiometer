@@ -69,7 +69,7 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 accroding to snia pts psedo code
 ```python
 from fioer.flow import flow_snia_iops
-flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
+flow_snia_iops(project_path="./wf",rwmix_mapping=[0,35,50,65,100], bs_mapping=[4,8,16,32])
 ```
 
 ### flow folder abstract

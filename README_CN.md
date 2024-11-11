@@ -76,11 +76,11 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 参照snia pts v2.0.1, 第七章psedo code
 ```python
 from fioer.flow import flow_snia_iops
-flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
+flow_snia_iops(project_path="./wf",rwmix_mapping=[0,35,50,65,100], bs_mapping=[4,8,16,32])
 ```
 
 ### flow folder abstract
-每个根据工作流程生成的fio任务对应一个文件夹，如下所示
+如flow.flow_snia_iops.py所示, 每个根据工作流程生成的fio任务对应一个文件夹
 ```shell
 tree ./wf
 ```

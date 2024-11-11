@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 # fioer task based SNIA standard workflow: IOPS test
 
 # for developing, assume the device is client-SSD which is:
-# TC=2, QD=16, 
+# TC=2, QD=16,not sure :(
 
 
 
@@ -30,7 +30,7 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="s
     
     # 2.2: SEQ Workload Independent Preconditioning
     # 2X capacity, 128KiB writes
-    precond = FioTask(pr.joinpath("02.precond"))
+    precond = FioTask(pr.joinpath("02.precond"), input_dict={})
     logger.info("start Preconditioning Task: seq write")
     precond.input.content["global"] = {
         "name":"seq",
@@ -116,20 +116,51 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="s
     
     # TODO: reporting
     print("currently finished")
+    plot_graph_bs_rwmix(pr, bs_mapping, rwmix_mapping)
     
     return 
 
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from fioer.flow.utils import collect_task_iops
 
-
-#MISC
-
-# from fioer.visualize import _load_json
-
-# def collect_job_data(task):
-
-#     _data = _load_json(task.view.output)
-#     iops_r_mean = _data[-1]["jobs"][0]["write"]["iops_mean"]
-#     iops_w_mean = _data[-1]["jobs"][0]["read" ]["iops_mean"]
-#     iops_total = iops_r_mean+iops_w_mean
+def plot_graph_bs_rwmix(pr, bs,rwmix):
     
-#     return iops_total
+    # data for plot
+    # bs = [0.5, 4, 8, 16, 32, 64, 128, 1024]
+    # rwmix = [0,50,100]
+
+    #collect data scheme
+    arr_iops = np.empty((len(bs), len(rwmix)), dtype=np.float32)
+    for i,_bs in enumerate(bs):
+        for j, _rwmix in enumerate(rwmix):
+            _task = FioTask(pr.joinpath(f"03.mapping-rwmix{_rwmix}-bs{_bs}/round-5"))
+            _data = collect_task_iops(_task)
+            arr_iops[i, j] = _data["total"]
+    
+    
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    xpos, ypos = np.meshgrid(np.arange(len(bs)), np.arange(len(rwmix)), indexing="ij")
+    xpos = xpos.flatten()
+    ypos = ypos.flatten()
+    zpos = np.zeros_like(xpos)
+    dz = arr_iops.flatten()
+    dx = dy = 0.5
+    ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color='skyblue', edgecolor='k')
+
+    ax.set_xlabel('Block Size (KiB)')
+    ax.set_ylabel('R/W Mix (%)')
+    ax.set_zlabel('IOPS')
+
+    ax.set_xticks(np.arange(len(bs)))
+    ax.set_xticklabels(bs)
+    ax.set_yticks(np.arange(len(rwmix)))
+    ax.set_yticklabels(rwmix)
+
+    plt.show()
+    
+    return

@@ -108,7 +108,7 @@ tree ./wf
 
 ## other visualize example
 
-gfio like:
+gfio style:
 ![iops_bw_r](./images/iops_bw_r.png) 
 ![iops_bw_w](./images/iops_bw_w.png)
 

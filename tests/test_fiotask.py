@@ -48,3 +48,15 @@ def test_fiotask_run(setup_fiotask):
     
     return _fio
 
+def test_fiotask_input():
+    
+                    
+    fio_a = FioTask(
+    work_path=_WORK_PATH+"input_a",
+    )
+    fio_a.input.content["aaa"] = "aaa"
+
+    fio_b = FioTask(
+    work_path=_WORK_PATH+"input_b",
+    )
+    assert fio_a.input.content != fio_b.input.content

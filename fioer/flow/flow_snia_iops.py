@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 
 
-def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
+def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="seqrw"):
     
     
     pr = Path(project_path)
@@ -30,7 +30,7 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
     
     # 2.2: SEQ Workload Independent Preconditioning
     # 2X capacity, 128KiB writes
-    precond = FioTask(pr.joinpath("step.02.precond"))
+    precond = FioTask(pr.joinpath("02.precond"))
     logger.info("start Preconditioning Task: seq write")
     precond.input.content["global"] = {
         "name":"seq",
@@ -48,7 +48,6 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
     precond.run()
     logger.info(f"Preconditioning Task finished")
     
-    
     # 3.1: Workload Dependent Preconditioning: test params
     # data pattern: random
     # value mapping:
@@ -61,8 +60,16 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
     # rwmix_mapping = [0,50,100]
     # bs_mapping = [4, 8]
     
+    if mode_rw == "seqrw":
+        mode_rw = "rw"
+    if mode_rw == "randrw":
+        mode_rw = "randrw"
+        
+    MAX_CONVERGE_ROUND = 6
+    
     num_tasks = len(rwmix_mapping) * len(bs_mapping)
     logger.info("start IOPs rwmix-bs mapping task...")
+    logger.info(f"current rw mode: {mode_rw}")
     logger.info(f"rwmix_mapping: {rwmix_mapping}")
     logger.info(f"bs_mapping: {bs_mapping}")
     logger.info(f"total tasks: {num_tasks}")
@@ -76,39 +83,41 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None):
             
             # TODO: converge task resume
             # max round set to 25, if not converge, then stop
-            # _tasks_round = []
-            # for _round in max_round:
+            _tasks_round = []
+            for _round in range(MAX_CONVERGE_ROUND):
                 
-            wd_precond = FioTask(pr.joinpath(f"step03.mapping_{rwmix}-{100-rwmix}_bs_{bs}"))
-            wd_precond.input.content["global"] = {
-                "name":f"rwmix_bs",
-                "rw": "randrw",
-                "rwmixread": rwmix,
-                "bs": f"{bs}k",
-                "direct": 1,
-                "ioengine":"libaio",
-                "runtime":200, #FIXME: for test, 10s
-                "time_based":1
-            }
-            wd_precond.input.content["rand_read_write"] = {
-                "size": "10M",# FIXME: owing to the volume prob, just use 10M foLSr test
-                "numjobs": 2,
-                "iodepth": 16,
-                "filename": "randrw_meta",
-            }
-            # for every 1s, print the status
-            wd_precond.run(cli_params={"status-interval": "1"})
-            logger.info(f"IOPs rwmix-bs mapping task: rwmix-{rwmix}/{100-rwmix} bs-{bs} finished")
-            
-            #TODO convergence check
-            #_res = check_convergence(tasks_round)
-            # if converged, then break
-            # get iops-(bs, rwmix) data
+                #BUG: input dict still have pointer problem
+                wd_precond = FioTask(pr.joinpath(f"03.mapping-rwmix{rwmix}-bs{bs}/round-{_round}"),input_dict={})
+                wd_precond.input.content["global"] = {
+                    "name":f"rwmix_bs",
+                    "rw": f"{mode_rw}", #seqrw for test  (rw/randrw)
+                    "rwmixread": rwmix,
+                    "bs": f"{bs}k",
+                    "direct": 1,
+                    "ioengine":"libaio", # modified here maybe convient to test other ioecd ..ngine
+                    "runtime": 60, # SNIA standard: 60s
+                    "time_based":1
+                }
+                wd_precond.input.content["read_write"] = {
+                    "size": "10M",# FIXME: owing to the volume prob, just use 10M foLSr test
+                    "numjobs": 1, #set to 1 
+                    "iodepth": 16,
+                    "filename": "rw_meta",
+                }
+                
+                # for every 1s, print the status
+                wd_precond.run(cli_params={"status-interval": "1"})
+                logger.info(f"IOPs rwmix-bs mapping task: rwmix-{rwmix}/{100-rwmix} bs-{bs} finished")
+                
+                #TODO convergence check
+                #_res = check_convergence(tasks_round)
+                # if converged, then break
+                # get iops-(bs, rwmix) data
     
     # TODO: reporting
+    print("currently finished")
     
     return 
-
 
 
 

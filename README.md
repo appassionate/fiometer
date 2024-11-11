@@ -72,7 +72,41 @@ from fioer.flow import flow_snia_iops
 flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
 ```
 
-### example
+### flow folder abstract
+every tasks in flow will be placed in determined folder, like below:
+```shell
+tree ./wf
+```
+
+```shell
+.
+├── 02.precond
+│   ├── input.fio
+│   ├── output.json
+│   ├── parsed.json
+│   └── seq_write_meta
+├── 03.mapping-rwmix0-bs16
+│   ├── round-0
+│   │   ├── input.fio
+│   │   ├── output.json
+│   │   ├── parsed.json
+│   │   └── rw_meta
+│   ├── round-1
+│   │   ├── input.fio
+│   │   ├── output.json
+│   │   ├── parsed.json
+│   │   └── rw_meta
+```
+
+3d graph draft:
+<div >
+    <img src="./images/flow_sina_poc.png" alt="Description" width="400">
+    <img src="./images/log.png" alt="Description" width="700">
+</div>
+
+
+
+## other visualize example
 
 gfio like:
 ![iops_bw_r](https://img.picui.cn/free/2024/10/31/6723a9604fbfd.png) 

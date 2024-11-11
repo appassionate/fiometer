@@ -3,7 +3,15 @@ fioer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和
 
 [中文](./README_CN.md)/[English](./README.md)
 
-## 使用示例 
+
+## 简易安装流程
+```shell
+git clone [repo.git]
+cd fioer
+pip install -e .
+```
+
+## 其他可视化使用示例 
 ### 1. 随机读/写混合示例(65/35)
 
 ```python
@@ -71,22 +79,49 @@ from fioer.flow import flow_snia_iops
 flow_snia_iops(project_path="./wf",rwmix_mapping=[0,50,100], bs_mapping=[4,8])
 ```
 
+### flow folder abstract
+每个根据工作流程生成的fio任务对应一个文件夹，如下所示
+```shell
+tree ./wf
+```
 
-### 如下图示例:
-
-gfio like:
-![iops_bw_r](https://img.picui.cn/free/2024/10/31/6723a9604fbfd.png) 
-![iops_bw_w](https://img.picui.cn/free/2024/10/31/6723a94ea84cc.png)
-
-#### iops: read/write 可视化
-![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
-
+```shell
+.
+├── 02.precond
+│   ├── input.fio
+│   ├── output.json
+│   ├── parsed.json
+│   └── seq_write_meta
+├── 03.mapping-rwmix0-bs16
+│   ├── round-0
+│   │   ├── input.fio
+│   │   ├── output.json
+│   │   ├── parsed.json
+│   │   └── rw_meta
+│   ├── round-1
+│   │   ├── input.fio
+│   │   ├── output.json
+│   │   ├── parsed.json
+│   │   └── rw_meta
+```
 
 ### SNIA IOPs 测试流程 草图
 <div >
     <img src="./images/flow_sina_poc.png" alt="Description" width="400">
     <img src="./images/log.png" alt="Description" width="700">
 </div>
+
+### 如下图示例:
+
+gfio style:
+![iops_bw_r](./images/iops_bw_r.png) 
+![iops_bw_w](./images/iops_bw_w.png)
+
+#### iops: read/write 可视化
+![iops](https://img.picui.cn/free/2024/10/31/6722f4b74e52b.png)
+
+
+
 
 #### latency: read/write 可视化
 ![latency](./images/lat_rw.png)

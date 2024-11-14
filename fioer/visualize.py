@@ -2,7 +2,7 @@ from pathlib import Path
 import copy
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 import numpy as np
 import json
 import matplotlib.pyplot as plt
@@ -19,7 +19,6 @@ class ViewCache():
         self.data = {}
     
 #singleton for cache output, avoid pydantic lock
-vcache = ViewCache()    
 
 def cumsum(array):
     return np.cumsum(array) / np.arange(1, len(array) + 1)
@@ -56,14 +55,22 @@ class FioView(BaseModel):
     work_path: Optional[str] = Field(None, exclude=True)
     file_output: str = "parsed.json"
     
+    _cache: dict = PrivateAttr(default_factory=dict)
+    
     def _load_job_info(self, job):
         self.work_path = job.work_path
+
+    def __init__(self, **kwargs):
+        
+        super().__init__(**kwargs)
+        self._cache = {}
+        
 
     @property
     def output(self):
         
-        if self.work_path in vcache.data:
-            return vcache.data[self.work_path]
+        if "output" in self._cache:
+            return self._cache["output"]
         # cache output data
         output_dir = Path(self.work_path).joinpath(self.file_output).absolute()
         if not output_dir.exists():
@@ -71,9 +78,9 @@ class FioView(BaseModel):
         with open(output_dir, "r") as f:
             data = json.load(f)
         logger.debug(f"loaded output once from {output_dir}.")
-        vcache.data[self.work_path] = data
+        self._cache["output"] = data
         
-        return vcache.data[self.work_path]
+        return self._cache["output"]
 
     @property
     def job_names(self):

@@ -81,6 +81,17 @@ class FioView(BaseModel):
         self._cache["output"] = data
         
         return self._cache["output"]
+    
+    def _reload_output(self):
+        output_dir = Path(self.work_path).joinpath(self.file_output).absolute()
+        if not output_dir.exists():
+            raise FileNotFoundError(f"file not found: {output_dir}")
+        with open(output_dir, "r") as f:
+            data = json.load(f)
+        logger.debug(f"reloaded output from {output_dir}.")
+        self._cache["output"] = data
+        
+        return self._cache["output"]
 
     @property
     def job_names(self):

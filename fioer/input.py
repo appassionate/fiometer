@@ -3,8 +3,6 @@ from .utils import ini2dict, dict2ini
 
 
 
-
-
 class FioInput(BaseModel):
 
     
@@ -20,3 +18,4 @@ class FioInput(BaseModel):
     def render_dict(self):
 
         return dict2ini(self.content)
+    

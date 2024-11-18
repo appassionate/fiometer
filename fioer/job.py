@@ -2,7 +2,7 @@ import os
 import subprocess
 import json
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 from .log import get_logger
@@ -107,9 +107,9 @@ class FioTask(JobBase):
 
     JOB_TYPE: str = "fio"
     executable: str = "fio"
-
-    input: FioInput = FioInput()
-    view: FioView = None
+    
+    input: FioInput = Field(default_factory=FioInput)
+    view: FioView=None
 
     cli_params: Optional[dict] = {}
 
@@ -117,7 +117,7 @@ class FioTask(JobBase):
         return f"FioTask(work_path={self.work_path}, status={self.status}, exec={self.executable}, cli_params={self.cli_params})"
 
     
-    def __init__(self, work_path, input_dict={}, **kwargs):
+    def __init__(self, work_path, input_dict=None,**kwargs):
         """create a fio task
         Args:
             work_path (_type_): task work path
@@ -126,11 +126,11 @@ class FioTask(JobBase):
         
         _work_path = str(Path(work_path).absolute())
         super().__init__(work_path=_work_path, **kwargs)  # pydantic init method
-
-        # TODO: refactor input
-        self.input.content = input_dict
         self._create_scheme()
         # after create scheme, extra view module will be loaded the job info
+        if input_dict:
+            self.input.content = input_dict
+        
         self.view = FioView()
         self.view._load_job_info(self)
 

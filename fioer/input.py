@@ -2,11 +2,15 @@ from pydantic import BaseModel, Field
 from .utils import ini2dict, dict2ini
 
 
+
+
+
 class FioInput(BaseModel):
 
     
     # avoid dict pointer problem BUG
     content: dict = Field(default_factory=dict)
+
 
     def from_input_file(self, filename):
 

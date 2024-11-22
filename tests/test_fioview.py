@@ -17,17 +17,18 @@ def setup_fiotask():
     return _fio
 
 
-#@pytest.mark.parametrize
+# 白盒测试: l
+# test job_num, lat_type 
 
-def test_fioview_view(setup_fiotask):
+@pytest.mark.parametrize("mode, lat_type", [
+    ("write", "clat"),
+    ("write", "slat"),
+    ("write", "lat" ),
+    ("read", "lat" ),
+    ("read", "lat" ),
+    ("read", "lat" ),
+])
+def test_fioview_view(setup_fiotask, mode, lat_type):
     
     _fio = setup_fiotask
-
-    _fio.view.view_iops(mode="write", job_name="file1", job_num=0, ax=None)
-    _fio.view.view_iops(mode="read",  job_name="file1", job_num=0, ax=None)
-
-    _fio.view.view_latency(mode="write", job_name="file1", job_num=0, ax=None)
-    _fio.view.view_latency(mode="read",  job_name="file1", job_num=0, ax=None)
-
-    _fio.view.view_iops_bw(mode="write",  job_name="file1", job_num=0, ax=None)
-    _fio.view.view_iops_bw(mode="read",   job_name="file1", job_num=0, ax=None)
+    _fio.view.view_latency(mode=mode, job_name="file1", job_num=0, lat_type=lat_type, ax=None)

@@ -111,7 +111,7 @@ class FioView(BaseModel):
 
         return _output
     
-    def get_job_dataframe(self, job_name=None, job_num=0):
+    def get_job_dataframe(self, mode="read",job_name=None, job_num=0):
         
         import pandas as pd
         output = self.filter_output_by_name(job_name)

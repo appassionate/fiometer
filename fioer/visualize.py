@@ -119,7 +119,6 @@ class FioView(BaseModel):
         
         return pd.DataFrame(frames)
     
-    
     #TODO: can view the by jobname and jobnum
     def view_latency(self, mode="write", lat_type="lat", job_name=None, job_num=0, ax=None):
         """_summary_

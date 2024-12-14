@@ -1,0 +1,11 @@
+[precondition]
+ 
+filename=/dev/some_device
+size=100%
+loops=2
+bs=128k
+direct=1
+rw=write
+thread=1
+ioengine=libaio
+write_bw_log=./bw_log

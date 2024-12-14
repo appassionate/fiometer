@@ -150,6 +150,26 @@ class FioTask(JobBase):
         parsed = process_json_timestamp(output)
         with open(Path(self.work_path) / "parsed.json", 'w') as f:
             json.dump(parsed, f, indent=2)
+            
+    def copy_to(self, dest_path):
+        """将当前FioTask复制到新的目标路径
+        
+        Args:
+            dest_path: 目标路径
+            
+        Returns:
+            FioTask: 新创建的FioTask实例
+        """
+        # 创建新的FioTask实例 
+        new_task = FioTask(work_path=dest_path)
+        
+        # 复制input内容，复制其他属性
+        new_task.input.content = self.input.content.copy()
+        new_task.cli_params = self.cli_params.copy() if self.cli_params else {}
+        new_task.executable = self.executable
+        
+        return new_task
+    
     
     def run(self, cli_params:dict=None):
         """run fio task

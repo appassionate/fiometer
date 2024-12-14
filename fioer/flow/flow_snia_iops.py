@@ -73,7 +73,8 @@ def flow_snia_iops(project_path, device_path=None, rwmix_mapping=None, bs_mappin
         precond.input.content["seq_write"]["size"] = "100%"
         precond.input.content["seq_write"]["loops"] = 2
     ### 
-    
+    # precond seems not need to print interval level status
+    # precond.run(cli_params={"status-interval": "1"})
     
     precond.run()
     logger.info(f"Preconditioning Task finished")
@@ -168,7 +169,6 @@ def plot_graph_bs_rwmix(pr, bs,rwmix):
             _task = FioTask(pr.joinpath(f"03.mapping-rwmix{_rwmix}-bs{_bs}/round-5"))
             _data = collect_task_iops(_task)
             arr_iops[i, j] = _data["total"]
-    
     
     
     fig = plt.figure()

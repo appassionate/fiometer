@@ -147,7 +147,9 @@ def flow_snia_iops(project_path, device_path=None, rwmix_mapping=None, bs_mappin
     
     # TODO: reporting
     print("currently finished")
-    plot_graph_bs_rwmix(pr, bs_mapping, rwmix_mapping)
+    fig, ax = plot_graph_bs_rwmix(pr, bs_mapping, rwmix_mapping)
+    fig.savefig(pr.joinpath("iops_bs_rwmix.png"))
+    
     
     return 
 
@@ -193,4 +195,4 @@ def plot_graph_bs_rwmix(pr, bs,rwmix):
 
     plt.show()
     
-    return
+    return fig, ax

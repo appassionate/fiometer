@@ -13,12 +13,32 @@ logger = get_logger(__name__)
 
 
 
-def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="seqrw"):
-    
+def flow_snia_iops(project_path, device_path=None, rwmix_mapping=None, bs_mapping=None, mode_rw="seqrw", as_file=True):
+    """_summary_
+
+    Args:
+        project_path (_type_): flow project path
+        device_path (_type_): device or directory path
+        rwmix_mapping (_type_, optional): _description_. Defaults to None.
+        bs_mapping (_type_, optional): _description_. Defaults to None.
+        mode_rw (str, optional): seqrw/randrw. Defaults to "seqrw".
+
+    Raises:
+        ValueError: _description_
+    """
     
     pr = Path(project_path)
     pr = pr.absolute()
+    
+    if device_path is None:
+        logger.warning("[WARNING] just for test, using project path as device path")
+        device_path = pr.joinpath("file_meta")
+    else:
+        device_path = Path(device_path)
+        # 
+    
     logger.info(f"Start IOPS test flow in project path: {pr}")
+    logger.info(f"device path: {device_path}")
     
     #1. Purge
     # currently we ignore "purge" task for pocs
@@ -33,18 +53,28 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="s
     precond = FioTask(pr.joinpath("02.precond"), input_dict={})
     logger.info("start Preconditioning Task: seq write")
     precond.input.content["global"] = {
-        "name":"seq",
+        "name":"precond",
         "rw": "write",
         "bs": "128k",
         "direct": 1,
         "ioengine":"libaio"
+
     }
+    
+    # size should be auto determined by /dev/xxx 100%,  loops=2 
     precond.input.content["seq_write"] = {
         "size": "128MB",# FIXME: should auto config the nvme device size
-        "numjobs": 2,
-        "iodepth": 16,
-        "filename": "seq_write_meta",
+        "numjobs": 1,
+        # "iodepth": 16,
+        "filename": f"{device_path}",
     }
+    ### FIXME 
+    if not as_file:
+        precond.input.content["seq_write"]["size"] = "100%"
+        precond.input.content["seq_write"]["loops"] = 2
+    ### 
+    
+    
     precond.run()
     logger.info(f"Preconditioning Task finished")
     
@@ -102,7 +132,7 @@ def flow_snia_iops(project_path, rwmix_mapping=None, bs_mapping=None, mode_rw="s
                     "size": "10M",# FIXME: owing to the volume prob, just use 10M foLSr test
                     "numjobs": 1, #set to 1 
                     "iodepth": 16,
-                    "filename": "rw_meta",
+                    "filename": f"{device_path}",
                 }
                 
                 # for every 1s, print the status

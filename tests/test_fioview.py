@@ -17,7 +17,6 @@ def setup_fiotask():
     return _fio
 
 
-# 白盒测试: l
 # test job_num, lat_type 
 
 @pytest.mark.parametrize("mode, lat_type", [

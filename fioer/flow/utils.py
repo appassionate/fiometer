@@ -8,8 +8,7 @@ def calc_test_slope(data: List[float]) -> float:
     """
     calculate the slope of the data
     """
-    
-    
+
 def collect_task_iops(task):
 
     _data = task.view.output

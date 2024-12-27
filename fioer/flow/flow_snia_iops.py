@@ -130,7 +130,7 @@ def flow_snia_iops(project_path, device_path=None, rwmix_mapping=None, bs_mappin
                     "time_based":1
                 }
                 wd_precond.input.content["read_write"] = {
-                    "size": "10M",# FIXME: owing to the volume prob, just use 10M foLSr test
+                    "size": "10M",# FIXME: timebased, it will loop when determined achieved
                     "numjobs": 1, #set to 1 
                     "iodepth": 16,
                     "filename": f"{device_path}",

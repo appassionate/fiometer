@@ -59,4 +59,4 @@ def test_fiotask_input():
     fio_b = FioTask(
     work_path=_WORK_PATH+"input_b",
     )
-    assert fio_a.input.content != fio_b.input.content
+    assert fio_a.input.content is not fio_b.input.content

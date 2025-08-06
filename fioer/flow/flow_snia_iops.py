@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from fioer.job import FioTask, PurgeTask
-from fioer.log import get_logger
+from fiometer.job import FioTask, PurgeTask
+from fiometer.log import get_logger
 
 logger = get_logger(__name__)
 
 # according to SNIA section 7
-# fioer task based SNIA standard workflow: IOPS test
+# fiometer task based SNIA standard workflow: IOPS test
 
 # for developing, assume the device is client-SSD which is:
 # TC=2, QD=16,not sure :(
@@ -156,7 +156,7 @@ def flow_snia_iops(project_path, device_path=None, rwmix_mapping=None, bs_mappin
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from fioer.flow.utils import collect_task_iops
+from fiometer.flow.utils import collect_task_iops
 
 def plot_graph_bs_rwmix(pr, bs,rwmix):
     

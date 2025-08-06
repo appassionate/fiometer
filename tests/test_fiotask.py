@@ -3,11 +3,11 @@ from pathlib import Path
 import shutil
 import unittest
 
-import fioer
-from fioer.job import FioTask
+import fiometer
+from fiometer.job import FioTask
 
-_WORK_PATH = '/tmp/fioer/test/'
-_TEMPLATE_DIR = Path(fioer.__file__).joinpath('../../templates').resolve()
+_WORK_PATH = '/tmp/fiometer/test/'
+_TEMPLATE_DIR = Path(fiometer.__file__).joinpath('../../templates').resolve()
 
 
 @pytest.fixture
@@ -28,7 +28,7 @@ def test_fiotask_init(setup_fiotask):
     
     # file exists
     assert Path(_fio.get_file_directory("input.fio")).exists()
-    assert Path(_fio.get_file_directory(".fioer_info.json")).exists()
+    assert Path(_fio.get_file_directory(".fiometer_info.json")).exists()
     
 
 def test_fiotask_run(setup_fiotask):
@@ -40,7 +40,7 @@ def test_fiotask_run(setup_fiotask):
     
     # file exists
     assert Path(_fio.get_file_directory("input.fio")).exists()
-    assert Path(_fio.get_file_directory(".fioer_info.json")).exists()
+    assert Path(_fio.get_file_directory(".fiometer_info.json")).exists()
     assert Path(_fio.get_file_directory("output.json")).exists()
     assert Path(_fio.get_file_directory("parsed.json")).exists()
     _fio._load_workpath()

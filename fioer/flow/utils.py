@@ -1,4 +1,4 @@
-from fioer.job import FioTask
+from fiometer.job import FioTask
 from typing import List
 import numpy as np
 

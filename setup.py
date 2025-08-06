@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="fioer",
+    name="fiometer",
     version="0.0.1",
     author="xiong ke",
     author_email="unamed@enterprise.com",

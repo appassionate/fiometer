@@ -1,5 +1,5 @@
-# fioer
-fioer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和可视化
+# fiometer
+fiometer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和可视化
 
 [中文](./README_CN.md)/[English](./README.md)
 
@@ -7,7 +7,7 @@ fioer: 用于 fio 的 Python 包装器，面向SSD测试，包括数据处理和
 ## 简易安装流程
 ```shell
 git clone [repo.git]
-cd fioer
+cd fiometer
 pip install -e .
 ```
 
@@ -15,7 +15,7 @@ pip install -e .
 ### 1. 随机读/写混合示例(65/35)
 
 ```python
-from fioer.job import FioTask
+from fiometer.job import FioTask
 
 template_file = "bala/randrw.fio"
 
@@ -75,7 +75,7 @@ randrw.view.view_latency(mode="both", lat_type="lat")
 ## SNIA IOPs 测试流程(未完成，开发中)
 参照snia pts v2.0.1, 第七章psedo code
 ```python
-from fioer.flow import flow_snia_iops
+from fiometer.flow import flow_snia_iops
 flow_snia_iops(project_path="./wf",rwmix_mapping=[0,35,50,65,100], bs_mapping=[4,8,16,32])
 ```
 

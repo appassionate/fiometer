@@ -63,12 +63,12 @@ class JobBase(BaseModel):
     def _dump_workpath(self):
 
         _dict = self.dict()
-        with open(Path(self.work_path) / ".fioer_info.json", 'w') as f:
+        with open(Path(self.work_path) / ".fiometer_info.json", 'w') as f:
             json.dump(_dict, f, indent=2)
 
     def _load_workpath(self):
         # it will not be a classmethod, for init state will occurs a recursion prob
-        with open(Path(self.work_path) / ".fioer_info.json", 'r') as f:
+        with open(Path(self.work_path) / ".fiometer_info.json", 'r') as f:
             _data = json.load(f)
         # using pydantic method to update data to the object
         # TODO: need refactor

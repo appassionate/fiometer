@@ -1,11 +1,11 @@
 import pytest
-from fioer.job import FioTask
+from fiometer.job import FioTask
 from pathlib import Path
-import fioer
+import fiometer
 
-_WORK_PATH = '/tmp/fioer/test/'
-_TEMPLATE_DIR = Path(fioer.__file__).joinpath('../../templates').resolve()
-_SAMPLE_DIR = Path(fioer.__file__).joinpath('../../tests/samples').resolve()
+_WORK_PATH = '/tmp/fiometer/test/'
+_TEMPLATE_DIR = Path(fiometer.__file__).joinpath('../../templates').resolve()
+_SAMPLE_DIR = Path(fiometer.__file__).joinpath('../../tests/samples').resolve()
 
 
 @pytest.fixture

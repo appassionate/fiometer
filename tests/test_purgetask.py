@@ -4,11 +4,11 @@ import shutil
 import pytest
 from pathlib import Path
 
-import fioer
-from fioer.job import PurgeTask
+import fiometer
+from fiometer.job import PurgeTask
 
-_WORK_PATH = '/tmp/fioer/test/'
-_TEMPLATE_DIR = Path(fioer.__file__).joinpath('../../templates').resolve()
+_WORK_PATH = '/tmp/fiometer/test/'
+_TEMPLATE_DIR = Path(fiometer.__file__).joinpath('../../templates').resolve()
 
 
 @pytest.fixture

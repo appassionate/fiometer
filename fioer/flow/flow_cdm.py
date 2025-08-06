@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from fioer.job import FioTask, PurgeTask
-from fioer.log import get_logger
+from fiometer.job import FioTask, PurgeTask
+from fiometer.log import get_logger
 
 logger = get_logger(__name__)
 
